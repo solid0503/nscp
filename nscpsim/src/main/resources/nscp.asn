@@ -1,0 +1,79 @@
+NSCP-Message DEFINITIONS ::= BEGIN
+
+CS-Roaming-Noti-Invoke ::= SEQUENCE {
+    imsi           [1] OCTET STRING (SIZE(15)), 
+    msisdn         [2] OCTET STRING (SIZE(16)),
+    mcc-mnc        [3] OCTET STRING (SIZE(3..10)),
+    first-ul       [4] OCTET STRING (SIZE(1)),
+    msc-Number     [5] OCTET STRING (SIZE(2..16)), 
+    vlr-Number     [6] OCTET STRING (SIZE(2..16)),
+    hlr-Number     [7] OCTET STRING (SIZE(2..16)),
+    mvno-op-code   [8] OCTET STRING (SIZE(1..7)) OPTIONAL,
+    mvno-subs-type [9] OCTET STRING (SIZE(1)) OPTIONAL,
+    ...
+}
+
+PS-Roaming-Noti-Invoke ::= SEQUENCE {
+    imsi           [1]    OCTET STRING (SIZE(15)),
+    msisdn         [2]    OCTET STRING (SIZE(16)),
+    mcc-mnc        [3]    OCTET STRING (SIZE(3..10)),
+    first-ul       [4]    OCTET STRING (SIZE(1)),
+    hlr-Number     [7]    OCTET STRING (SIZE(2..16)),
+    sgsn-Number    [8]    OCTET STRING (SIZE(2..16)),
+    mvno-op-code   [9]    OCTET STRING (SIZE(1..7)) OPTIONAL,
+    mvno-subs-type [10]   OCTET STRING (SIZE(1)) OPTIONAL,
+    ... 
+}
+
+EPS-Roaming-Noti ::= SEQUENCE {
+    imsi           [1]    OCTET STRING (SIZE(15)),
+    msisdn         [2]    OCTET STRING (SIZE(16)),
+    mcc-mnc        [3]    OCTET STRING (SIZE(3..10)),
+    first-ul       [4]    OCTET STRING (SIZE(1)),
+    hss-host-name  [7]    OCTET STRING (SIZE(2..128)),
+    mme-host-name  [8]    OCTET STRING (SIZE(2..128)),
+    mvno-op-code   [9]    OCTET STRING (SIZE(1..7)) OPTIONAL,
+    mvno-subs-type [10]   OCTET STRING (SIZE(1)) OPTIONAL,
+    ...
+}
+
+Cancellation-Noti-Invoke ::= SEQUENCE {
+    imsi           [1]     OCTET STRING (SIZE(15)),
+    msisdn         [2]     OCTET STRING (SIZE(16)),
+    mcc-mnc        [3]     OCTET STRING (SIZE(3..10)),
+    msc-Number     [5]     OCTET STRING (SIZE(2..16)) OPTIONAL,
+    vlr-Number     [6]     OCTET STRING (SIZE(2..16)) OPTIONAL,
+    hlr-Number     [7]     OCTET STRING (SIZE(2..16)) OPTIONAL,
+    sgsn-Number    [8]     OCTET STRING (SIZE(2..16)) OPTIONAL,
+    cancel-type    [9]     Cancel-Type,
+    hss-host-name  [10]    OCTET STRING (SIZE(2..128)),
+    mme-host-name  [11]    OCTET STRING (SIZE(2..128)),
+    ...
+}
+
+Cancel-Type ::= ENUMERATED {
+    comeBackHome(1),
+    serviceWithdrawal(2),
+    cancelationByOperator(3),
+    ...
+}
+
+Roaming-Information-Query-Invoke ::= SEQUENCE {
+    imsi          [1]     OCTET STRING (SIZE(15)) OPTIONAL,
+    msisdn        [2]     OCTET STRING (SIZE(16)),
+    ...
+}
+
+Roaming-Information-Query-Return ::= SEQUENCE {
+    msisdn         [2]     OCTET STRING (SIZE(16)),
+    mcc-mnc        [3]     OCTET STRING (SIZE(3..10)),
+    msc-Number     [5]     OCTET STRING (SIZE(2..16)) OPTIONAL,
+    vlr-Number     [6]     OCTET STRING (SIZE(2..16)) OPTIONAL,
+    hlr-Number     [7]     OCTET STRING (SIZE(2..16)) OPTIONAL,
+    sgsn-Number    [8]     OCTET STRING (SIZE(2..16)) OPTIONAL,
+    mvno-op-code   [10]    OCTET STRING (SIZE(1..7)) OPTIONAL,
+    mvno-subs-type [11]    OCTET STRING (SIZE(1)) OPTIONAL,
+    ...
+}
+
+END

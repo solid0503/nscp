@@ -1,0 +1,454 @@
+-- K_HUB-ops-args {itu-t(0) identified-organization(4) etsi(0) mobileDomain(0)
+-- umts-network(1) modules(3) cap-GPRS-ops-args(107) version1(1)}
+
+DEFINITIONS IMPLICIT TAGS ::= BEGIN
+
+EXPORTS
+    DIS-TES-SUBSArg,
+    DIS-TES-SUBSRes,
+    CHG-TES-SUBSArg,
+    CHG-TES-REMAINSArg,
+    SEND-TES-RArg,
+    SEND-AUTH-SMSArg,
+    SEND-AUTH-SMSRes,
+    ANSWER-AUTHSMSArg,
+    ANSWER-AUTHSMSRes,
+    USSD-Arg,
+    USSD-Res,
+    NETWORK-CALL-REQUESTArg,
+    NETWORK-CALL-REQUESTRes,
+    REPORT-CALLArg,
+    CHECK-CALL-STATUSArg,
+    CHECK-CALL-STATUSRes,
+    CallTerminationNotificationArg,
+    CallTerminationResultNotificationArg,
+    DragAndDropCallRequestArg,
+    DragAndDropCallReportArg,
+    ERROR
+    ;
+
+IMPORTS
+    ;
+
+ASCII-AddressString ::= OCTET STRING (SIZE (1..maxAsciiAddressLength))
+maxAsciiAddressLength INTEGER ::= 32
+
+DIS-TES-SUBSArg ::= SEQUENCE {
+    win-Ctn        [0]    OCTET STRING  (  SIZE(10..11) )
+}
+
+-- WIN-CTN
+-- 전화번호
+-- 01022334567
+
+DIS-TES-SUBSRes ::= SEQUENCE {
+    win-Ctn         [0]  OCTET STRING ( SIZE(10..11) ),
+    win-Status      [1]  OCTET STRING ( SIZE(1) )        OPTIONAL,
+    win-Pin         [2]  OCTET STRING ( SIZE(4) )        OPTIONAL,
+    win-Regi-Date   [3]  OCTET STRING ( SIZE(6) )        OPTIONAL,
+    win-Private-Ann [4]  OCTET STRING ( SIZE(1) )        OPTIONAL,
+    win-Attempt     [5]  OCTET STRING ( SIZE(1) )        OPTIONAL,
+    win-F-Remains   [6]  OCTET STRING ( SIZE(1..9) )     OPTIONAL,
+    win-S-Remains   [7]  OCTET STRING ( SIZE(1..9) )     OPTIONAL,
+    win-Remains1    [8]  OCTET STRING ( SIZE(1..9) )     OPTIONAL,
+    win-Remains2    [9]  OCTET STRING ( SIZE(1..9) )     OPTIONAL,
+    win-Sms-R       [10] OCTET STRING ( SIZE(1..9) )     OPTIONAL,
+    win-Video-R     [11] OCTET STRING ( SIZE(1..9) )     OPTIONAL,
+    win-Automax-R   [12] OCTET STRING ( SIZE(1..9) )     OPTIONAL,
+    win-Ims-R       [13] OCTET STRING ( SIZE(1..9) )     OPTIONAL,
+    ipmax-R         [14] OCTET STRING ( SIZE(1..9) )     OPTIONAL,
+    ipvas-R         [15] OCTET STRING ( SIZE(1..9) )     OPTIONAL,
+    win-Smc-Flag    [16] OCTET STRING ( SIZE(1) )        OPTIONAL,
+    win-Special-No1 [17] OCTET STRING ( SIZE(10..11) )   OPTIONAL,
+    win-Friend-Flag [18] OCTET STRING ( SIZE(1) )        OPTIONAL,
+    win-Friend-No   [19] OCTET STRING ( SIZE(1..16) )    OPTIONAL,
+    win-Family-Flag [20] OCTET STRING ( SIZE(1) )        OPTIONAL,
+    win-Family-No1  [21] OCTET STRING ( SIZE(1..16) )    OPTIONAL,
+    win-Family-No2  [22] OCTET STRING ( SIZE(1..16) )    OPTIONAL,
+    win-Family-No3  [23] OCTET STRING ( SIZE(1..16) )    OPTIONAL,
+    win-Family-No4  [24] OCTET STRING ( SIZE(1..16) )    OPTIONAL,
+    mega-Plus       [25] OCTET STRING ( SIZE(1) )        OPTIONAL,
+    mega-M1         [26] OCTET STRING ( SIZE(10..11) )   OPTIONAL,
+    mega-M2         [27] OCTET STRING ( SIZE(10..11) )   OPTIONAL,
+    mega-M3         [28] OCTET STRING ( SIZE(10..11) )   OPTIONAL,
+    mega-M4         [29] OCTET STRING ( SIZE(10..11) )   OPTIONAL,
+    mega-L1         [30] OCTET STRING ( SIZE(9..12) )    OPTIONAL,
+    mega-L2         [31] OCTET STRING ( SIZE(9..12) )    OPTIONAL
+}
+
+-- WIN-STATUS
+-- 일시정지(1),일시정지 해지(0)
+-- 1
+
+-- WIN-PIN
+-- 비밀번호
+-- 3421
+
+-- WIN-REGI-DATE
+-- 등록일(YYYYmmdd)
+-- 20100218
+
+-- WIN-PRIVATE-ANN
+-- 안내방송
+-- 0
+
+-- WIN-ATTEMPT
+-- 전송 횟수
+-- 4
+
+-- WIN-F-REMAINS
+-- 기본알 (BASE R)
+-- 100
+
+-- WIN-S-REMAINS
+-- 충전알 (CHARGE R)
+-- 50
+
+-- WIN-REMAINS1
+-- 수신알 (RCVD R)
+-- 10
+
+-- WIN-REAMINS2
+-- 메직엔 (MAGICN R)
+-- 10
+
+-- WIN-SMS-R
+-- SMS 전용 알
+-- 20
+
+-- WIN-VIDEO-R
+-- 화상 전용 알
+-- 20
+
+-- WIN-AUTOMAX-R
+-- 자동 충전 알
+-- 100
+
+-- WIN-IMS-R
+-- IMS 전용 알
+-- 20
+
+-- IPMAX-R
+-- 정보료 상한알
+-- 50
+
+-- IPVAS-R
+-- 정보료 전용알
+-- 50
+
+-- WIN-SMC-FLAG
+-- 문자무제한가입여부(1:ON 0:OFF)
+-- 1
+
+-- WIN-SPECIAL-NO1
+-- 지정번호할인 번호
+-- 01013212144
+
+-- WIN-FRIEND-FLAG
+-- 지정번호무제한가입여부(1:ON 0:OFF)
+-- 0
+
+-- WIN-FRIEND-NO
+-- 지정번호무제한지정번호 (0:등록안됨)
+-- 0
+
+-- WIN-FAMILY-FLAG
+-- 패밀리무제한가입여부 (1:ON 0:OFF)
+-- 0
+
+-- WIN-FAMILY-NO1
+-- 패밀리무제한지정번호1 (0:등록안됨)
+-- 0
+
+-- WIN-FAMILY-NO2
+-- 패밀리무제한지정번호2 (0:등록안됨)
+-- 0
+
+-- WIN-FAMILY-NO3
+-- 패밀리무제한지정번호3 (0:등록안됨)
+-- 0
+
+-- WIN-FAMILY-NO4
+-- 패밀리무제한지정번호4 (0:등록안됨)
+-- 0
+
+-- MEGA-PLUS
+-- KT 결합 PLUS 상품 가입여부 (1:가입 0:미가입)
+-- 1
+
+-- MEGA-M1
+-- 메가패스 결합 상품에 등록되는 이동전화 번호1 
+-- 0162011235
+
+-- MEGA-M2
+-- 메가패스 결합 상품에 등록되는 이동전화 번호2
+-- 0162331234
+
+-- MEGA-M3
+-- 메가패스 결합 상품에 등록되는 이동전화 번호3
+-- 0162331233
+
+-- MEGA-M4
+-- 메가패스 결합 상품에 등록되는 이동전화 번호4
+-- 0162331232
+
+-- MEGA-L1
+-- 메가패스 결합 상품에 등록되는 집전화 번호1
+-- 023011235 
+
+-- MEGA-L2
+-- 메가패스 결합 상품에 등록되는 집전화 번호2
+-- 023415533
+
+CHG-TES-SUBSArg ::= SEQUENCE {
+    win-Ctn         [0]    OCTET STRING ( SIZE(10..11) )        ,
+    win-Private-Ann [1]    OCTET STRING ( SIZE(1) )        OPTIONAL,
+    win-Pin         [2]    OCTET STRING ( SIZE(4) )        OPTIONAL,
+    win-Status      [3]    OCTET STRING ( SIZE(1) )        OPTIONAL,
+    win-F-Remains   [4]    OCTET STRING ( SIZE(1..9) )     OPTIONAL,
+    win-S-Remains   [5]    OCTET STRING ( SIZE(1..9) )     OPTIONAL,
+    win-Remains1    [6]    OCTET STRING ( SIZE(1..9) )     OPTIONAL,
+    win-Remains2    [7]    OCTET STRING ( SIZE(1..9) )     OPTIONAL,
+    win-Sms-R       [8]    OCTET STRING ( SIZE(1..9) )     OPTIONAL,
+    win-Video-R     [9]    OCTET STRING ( SIZE(1..9) )     OPTIONAL,
+    win-Automax-R   [10]   OCTET STRING ( SIZE(1..9) )     OPTIONAL,
+    win-Ims-R       [11]   OCTET STRING ( SIZE(1..9) )     OPTIONAL,
+    ipmax-R         [12]   OCTET STRING ( SIZE(1..9) )     OPTIONAL,
+    ipvas-R         [13]   OCTET STRING ( SIZE(1..9) )     OPTIONAL
+}
+
+CHG-TES-REMAINSArg ::= SEQUENCE {
+    win-Ctn        [0]    OCTET STRING ( SIZE(10..11) ),
+    win-F-Remains  [1]    OCTET STRING ( SIZE(1..9) )        OPTIONAL,
+    win-S-Remains  [2]    OCTET STRING ( SIZE(1..9) )        OPTIONAL,
+    win-Remains2   [3]    OCTET STRING ( SIZE(1..9) )        OPTIONAL,
+    win-Remains1   [4]    OCTET STRING ( SIZE(1..9) )        OPTIONAL,
+    win-Sms-R      [5]    OCTET STRING ( SIZE(1..9) )        OPTIONAL,
+    win-Video-R    [6]    OCTET STRING ( SIZE(1..9) )        OPTIONAL,
+    win-Automax-R  [7]    OCTET STRING ( SIZE(1..9) )        OPTIONAL,
+    ipvas-R        [8]    OCTET STRING ( SIZE(1..9) )        OPTIONAL
+}
+
+SEND-TES-RArg ::= SEQUENCE {
+    present-Pty-Ctn  [0]    OCTET STRING ( SIZE(10..11) ),
+    given-Pty-Ctn    [1]    OCTET STRING ( SIZE(10..11) ),
+    password         [2]    OCTET STRING ( SIZE(4) ),
+    gift-R           [3]    OCTET STRING ( SIZE(1..9) )
+}
+
+-- PRESEND-PTY-CTN
+-- 송신사 전화번호
+-- 01023415632
+
+-- GIVEN-PTY-CTN
+-- 수신자 전화번호
+-- 01034215642
+
+-- PASSWORD
+-- 송신자의 패스워드
+-- 3322
+
+-- GIFT-R
+-- 전송알
+-- 100
+
+SEND-AUTH-SMSArg ::= SEQUENCE {
+    win-Ctn         [0]    OCTET STRING ( SIZE(10..11) )        
+}
+
+SEND-AUTH-SMSRes ::= SEQUENCE {
+    auth-Num        [0]    OCTET STRING ( SIZE(6) )
+}
+
+-- AUTH-NUM
+-- 인증번호
+-- 245212
+
+ANSWER-AUTHSMSArg ::= SEQUENCE {
+    win-Ctn         [0]    OCTET STRING (SIZE(10..11)),
+    auth-Num        [1]    OCTET STRING ( SIZE(6) )
+}
+
+ANSWER-AUTHSMSRes ::= SEQUENCE {
+    auth-Result     [0]    OCTET STRING ( SIZE(1) )
+}
+
+-- AUTH-RESULT
+-- 인증결과 (0:인증성공 1:인증실패)
+-- 0
+
+USSD-Arg ::= SEQUENCE {
+    ussd-DataCodingScheme [UNIVERSAL 4]    OCTET STRING ( SIZE(1) ),
+    ussd-String           [UNIVERSAL 4]    OCTET STRING ( SIZE(1..160) ),
+    alertingPattern       [UNIVERSAL 4]    OCTET STRING ( SIZE(1) )        OPTIONAL,
+    msisdn                [0]              OCTET STRING (SIZE (1..20) )    OPTIONAL 
+}
+
+-- USSD-DATACODINGSCHEME
+-- Ussd-String의 character Set을 명시한다. (H'OF:GSM default character set H'19:KSC5601)
+-- 0x19
+
+-- USSD-STRING
+-- ServiceCode를 포함한다. (Data-Coding-Scheme에 명시된 Character Set으로 인코딩)
+-- *145#
+
+-- ALERTINGPATTERN
+-- Not Used
+-- 0
+
+-- MSISDN
+-- 전화번호
+-- 01032212233
+
+
+USSD-Res ::= SEQUENCE {
+    ussd-DataCodingScheme [UNIVERSAL 4]    OCTET STRING ( SIZE(1) ),
+    ussd-String           [UNIVERSAL 4]    OCTET STRING ( SIZE(1..160) )
+}    
+
+NETWORK-CALL-REQUESTArg ::= SEQUENCE {
+    callingPartyNumber [0] OCTET STRING ( SIZE(1..20) ),
+    calledPartyNumber  [1] OCTET STRING ( SIZE(1..20) ),
+    callType           [2] OCTET STRING ( SIZE(1) ),
+    callReportFlag     [3] OCTET STRING ( SIZE(1) ),
+    chargingNumber     [4] OCTET STRING (SIZE(1..20)) OPTIONAL,
+    detectionPoint     [5] CallStatus                 OPTIONAL
+}
+
+-- CALLINGPARTYNUMBER
+-- 전화번호
+-- 01033821123
+
+-- CALLEDPARTYNUMBER
+-- 전화번호 
+-- 01033229983
+
+-- CALLTYPE
+-- 호유형 (0:음성호 1:영상호)
+-- 0
+
+-- CALLREPORTFLAG
+-- 리포트 전송 유무 (0:호상태를 리포트 하지 않는다 1:호 상태를 주기적으로 리포트한다.)
+-- 1
+
+-- DETECTIONPOINT
+-- 보고 받고자 하는 DETECTIONPOINT
+-- 1
+
+NETWORK-CALL-REQUESTRes ::= SEQUENCE {
+    callReferenceNumber    [0]    OCTET STRING ( SIZE(1..8) )        
+}
+
+-- CALLREFERENCENUMBER
+-- 호식별자
+-- 23114422
+
+
+REPORT-CALLArg ::= SEQUENCE {
+    callStatus           [0]    CallStatus,
+    callReferenceNumber  [1]    OCTET STRING ( SIZE(1..8) )
+}
+
+CHECK-CALL-STATUSArg ::= SEQUENCE {
+    callReferenceNumber    [1]    OCTET STRING ( SIZE(1..8) )
+}
+
+CHECK-CALL-STATUSRes ::= SEQUENCE {
+    callStatus        [0]    CallStatus
+}
+
+CallStatus ::= ENUMERATED {
+    callingPartyAnswer(1),
+    calledPartyAnswer(2),
+    callingPartyNoAnswer(3),
+    calledPartyNoAnswer(4),
+    callingPartyBusy(5),
+    calledPartyBusy(6),
+    callingPartyRouteSelectFailure(7),
+    calledPartyRouteSelectFailure(8),
+    callingPartyAbandon(9),
+    disConnect(10),
+    trying(11),
+    notExistCall(12)
+}
+
+CallTerminationNotificationArg ::= SEQUENCE {
+    callReferenceNumber      [0]    OCTET STRING ( SIZE(1..8) ),
+    serviceID                [1]    ServiceID,
+    callTerminationResult    [2]    CallTerminationResult,
+    callingPartyNumber       [3]    ASCII-AddressString,
+    calledPartyNumber        [4]    ASCII-AddressString,
+    destinationRoutingNumber [5]    OCTET STRING ( SIZE(1..32) )
+}
+
+-- DESTINATIONROUTINGNUMBER
+-- KHUB에서 ROUTING을 위해 사용할 번호
+-- 38727273
+
+CallTerminationResultNotificationArg ::= SEQUENCE {
+    callReferenceNumber      [0]    OCTET STRING ( SIZE(1..8) ),
+    serviceID                [1]    ServiceID,
+    callterminationResult    [2]    CallTerminationResult,
+    callingPartyNumber       [3]    ASCII-AddressString,
+    calledPartyNumber        [4]    ASCII-AddressString,
+    destinationRoutingNumber [5]    OCTET STRING ( SIZE(1..32) )
+}
+
+CallTerminationResult ::= ENUMERATED {
+    underCallProcessing(1),
+    answer (2),
+    busy (3),
+    noAnswer(4),
+    disconnectedByCallingParty(5),
+    forwardedToVMS(6),
+    callForwarding(7),
+    routeSelectFailure(8)
+}
+
+DragAndDropCallRequestArg ::= SEQUENCE {
+    callReferenceNumber        [0]      OCTET STRING ( SIZE(1..8) ),
+    serviceID                  [1]   ServiceID,
+    callingPartyNumber         [2]      ASCII-AddressString,
+    calledPartyNumber          [3]      ASCII-AddressString,
+    forwardedToNumber          [4]      ASCII-AddressString,
+    callForwardingProhibitFlag [5]   BOOLEAN OPTIONAL
+}
+
+-- FORWARDEDTONUMBER
+-- 전환될 번호
+-- 01023145872
+
+-- CALLFORWARDINGPROHIBITFLAG
+-- 제3의 번호로의 호 전환 가능 여부(BOOLEAN) 0:허용 1:금지
+-- 0
+
+DragAndDropCallReportArg ::= SEQUENCE {
+    callReferenceNumber    [0]    OCTET STRING ( SIZE(1..8) ),
+    serviceID              [1]     ServiceID,
+    dragAndDropCallResult  [2]    DragAndDropCallResult
+}
+
+DragAndDropCallResult ::= ENUMERATED {
+    underCallProcessing(1),
+    answer (2),
+    busy (3),
+    noAnswer(4),
+    disconnectedByCallingParty(5),
+    forwardedToVMS(6),
+    callForwarding(7),
+    routeSelectFailure(8)
+}
+
+ServiceID ::= ENUMERATED {
+    callTerminationNotification(1),
+    callTerminationResult(2),
+    dragAndDropCallRequest(3),    
+    dragAndDropCallReport(4)
+}
+
+ERROR ::= SEQUENCE {
+    errorCode    [0] OCTET STRING(SIZE(1)),
+    errorReason  [1] OCTET STRING        OPTIONAL
+}
+
+END
