@@ -213,9 +213,9 @@ public class NscpSimContext {
 		message.setServiceId((short)ServiceId.ROAMING_LOCATION_INFO.getValue());
 		message.setMessageType(MessageType.TERMINATION.getValue());
 		
-		Short serviceId = asn1MessageFactory.getServiceIdByName(operationName);
+		Integer serviceId = asn1MessageFactory.getServiceIdByName(operationName);
 		message.setServiceId(serviceId);
-		Short opcode = asn1MessageFactory.getOpcodeByName(operationName);
+		Integer opcode = asn1MessageFactory.getOpcodeByName(operationName);
 		message.setOperationCode(opcode);
 		
 		message.setAsn1Message(asn1MessageFactory.newMessage(operationName));

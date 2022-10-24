@@ -1,5 +1,6 @@
 package com.uangel.ktiscp.nscp.nscpib.sock;
 
+import com.uangel.ktiscp.nscp.common.sock.MessageType;
 import com.uangel.ktiscp.nscp.common.sock.NscpMessage;
 
 import io.netty.channel.ChannelHandlerContext;
@@ -25,7 +26,23 @@ public class TcpServerHandler extends ChannelInboundHandlerAdapter {
 		
 		NscpMessage nscpMessage = (NscpMessage)msg;
 		if ( log.isInfoEnabled() ) {
-			log.info("recvMsg:{}", nscpMessage.getTraceString());
+			log.info("\n=>>=======================>>============================================================================"
+				   + "\n    client({}) => NSCP({})"
+			       + "\n=>>=======================>>============================================================================"
+			       + "{}"
+			       + "\n=>>=======================>>============================================================================",
+					ctx.channel().remoteAddress(), ctx.channel().localAddress(),nscpMessage.getTraceString());
+		}
+		
+		NscpMessage res = nscpMessage.getResponse(MessageType.NONE);
+		ctx.writeAndFlush(res);
+		if ( log.isInfoEnabled() ) {
+			log.info("\n=<<=======================<<============================================================================"
+					   + "\n    client({}) <= NSCP({})"
+				       + "\n=<<=======================<<============================================================================"
+				       + "{}"
+				       + "\n=<<=======================<<============================================================================",
+						ctx.channel().remoteAddress(), ctx.channel().localAddress(),res.getTraceString());
 		}
 	}
 

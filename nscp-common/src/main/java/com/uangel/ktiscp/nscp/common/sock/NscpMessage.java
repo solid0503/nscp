@@ -1,8 +1,10 @@
 package com.uangel.ktiscp.nscp.common.sock;
 
+import java.nio.ByteBuffer;
 import java.util.Date;
 
 import com.uangel.ktiscp.nscp.common.asn1.Asn1Message;
+import com.uangel.ktiscp.nscp.common.util.TBCDUtil;
 import com.uangel.ktiscp.nscp.common.util.TimeUtil;
 
 import lombok.Data;
@@ -90,16 +92,45 @@ public class NscpMessage {
 		sb.append("\n\t\t").append("messageType        : ").append(MessageType.fromInt(messageType)).append("("+toHex(messageType)+")");
 		sb.append("\n\t\t").append("serviceId          : ").append(ServiceId.fromInt(serviceId)).append("("+toHex(serviceId)+")");
 		sb.append("\n\t\t").append("operationCode      : ").append(toHex(operationCode));
-		sb.append("\n\t\t").append("routingInformation : ").append(routingInformation);
+		sb.append("\n\t\t").append("routingInformation : ").append(bytesToHex(routingInformation) 
+				+ "(" + routingInfoString(routingInformation) + ")");
 		sb.append("\n\t\t").append("oTID               : ").append(oTID);
 		sb.append("\n\t\t").append("dTID               : ").append(dTID);
 		sb.append("\n\t\t").append("timeStamp          : ").append(timeStamp)
 				.append("(" + TimeUtil.dateToString(new Date(new Long(timeStamp)*1000), "yyyy/MM/dd HH:mm:ss")+ ")");
-		sb.append("\n\t\t").append("ASN.1              : ").append(asn1Message.getTraceString());
+		if ( asn1Message != null ) {
+			sb.append("\n\t\t").append("ASN.1              : ").append(asn1Message.getTraceString());
+		}
 		return sb.toString();
 	}
 	
 	private static String toHex(int n) {
 		return String.format("0x%02x", n);
+	}
+	
+	private static String bytesToHex(byte[] a) {
+		StringBuilder sb = new StringBuilder(a.length * 2);
+		for(byte b: a) {
+			sb.append(String.format("%02x ", b));
+		}
+		return sb.toString();
+	}
+	
+	private static String routingInfoString(byte[] routingInfo) {
+		ByteBuffer buffer = ByteBuffer.wrap(routingInfo);
+		byte flag = buffer.get();
+		if ( flag == 0 ) {
+			return "NONE";
+		}
+		byte[] prefix = new byte[3];
+		buffer.get(prefix);
+		byte[] npa = new byte[2];
+		buffer.get(npa);
+		
+		String strPrefix = TBCDUtil.toTBCD(prefix);
+		String strNpa = TBCDUtil.toTBCD(npa);
+		
+		
+		return String.format("Prefix:{}, NPA:{}", strPrefix, strNpa);
 	}
 }
