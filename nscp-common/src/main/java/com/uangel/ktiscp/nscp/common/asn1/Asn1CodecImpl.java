@@ -23,6 +23,9 @@ import com.uangel.asn1.parser.Asn1ParserFactory;
 
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * ASN.1 메시지를 ByteBuffer로 Encode/Decode하는 모듈 구현체
+ */
 @Component
 @Slf4j
 public class Asn1CodecImpl implements Asn1Codec {

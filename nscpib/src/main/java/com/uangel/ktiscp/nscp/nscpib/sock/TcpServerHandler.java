@@ -85,13 +85,17 @@ public class TcpServerHandler extends ChannelInboundHandlerAdapter {
 		log.error("exceptionCaught() RemoteAddress=" + ctx.channel().remoteAddress() , cause);
 	}
 
+	/**
+	 * 메시지 수신 Idle 처리를 위해 정의
+	 */
 	@Override
 	public void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception {
 		if (evt instanceof IdleStateEvent) {
 		    IdleStateEvent e = (IdleStateEvent) evt;
+		    // 수신 Idle 발생인 경우
 		    if (e.state() == IdleState.READER_IDLE) {
 		    	log.info("Recv idle... RemoteAddress={}", ctx.channel().remoteAddress());
-		    	NscpMessage pingMessage = this.nscpMessageFactory.createPingMessage();
+		    	NscpMessage pingMessage = this.nscpMessageFactory.createPingMessage(); // ping 메시지 생성
 		    	Transaction tr = new Transaction();
 		    	// ping에 대한 timeout handle은 특수하므로 여기에서 정의한다.
 		    	tr.setTimeoutHandler(new TransactionTimeoutHandler() {
@@ -101,10 +105,10 @@ public class TcpServerHandler extends ChannelInboundHandlerAdapter {
 						ctx.close();
 					}
 		    	});
-		    	nscpibTrManager.addTransaction(pingMessage.getTransactionId(), tr);
+		    	nscpibTrManager.addTransaction(pingMessage.getTransactionId(), tr); // 트랜젝션 등록
 		    	
-		    	ctx.writeAndFlush(pingMessage);
-		    	this.printSendMsg(ctx, pingMessage);
+		    	ctx.writeAndFlush(pingMessage); // ping 메시지 전송
+		    	this.printSendMsg(ctx, pingMessage); // 이쁘게 출력
 		    }		            
 	    }
 	}

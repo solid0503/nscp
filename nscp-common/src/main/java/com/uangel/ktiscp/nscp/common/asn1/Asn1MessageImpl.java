@@ -11,8 +11,8 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class Asn1MessageImpl implements Asn1Message {
 	String name;
-	Map<String,Object> map = new HashMap<String, Object>();
-	ArrayList<String> orderedNames = new ArrayList<String>();
+	Map<String,Object> map = new HashMap<String, Object>();   // 값을 맵에 저장해둔다.
+	ArrayList<String> orderedNames = new ArrayList<String>(); // 출력할때 순서를 위해 별도 관리
 	
 	Asn1MessageImpl(String name) {
 		this.name = name;
