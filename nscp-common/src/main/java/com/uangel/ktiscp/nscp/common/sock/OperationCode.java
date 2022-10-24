@@ -1,6 +1,8 @@
 package com.uangel.ktiscp.nscp.common.sock;
 
 public enum OperationCode {
+	NONE(0x00),
+	
 	// 비기 서비스
 	DIS_TES_SUBS(0x10),
 	CHG_TES_SUBS(0x07),

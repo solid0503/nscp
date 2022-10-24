@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public enum ServiceId {
+	NONE(0x00),
 	TES(0x01),
 	USSD(0x02),
 	CLICK_TO_CALL(0x03),

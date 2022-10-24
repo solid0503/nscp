@@ -17,6 +17,9 @@ import io.netty.handler.logging.LoggingHandler;
 import lombok.extern.slf4j.Slf4j;
 import io.netty.channel.nio.NioEventLoopGroup;
 
+/**
+ * 외부 TCP/IP 연동을 위한 Netty 부트스트랩 구현
+ */
 @Component
 @Slf4j
 public class TcpServer extends Thread {

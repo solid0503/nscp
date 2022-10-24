@@ -7,6 +7,7 @@ public class Transaction {
 	private long requestTime;
 	private TransactionTimerTask timerTask;
 	private HashMap<String,Object> datas = new HashMap<String,Object>();
+	TransactionTimeoutHandler timeoutHandler;
 	
 	public Transaction() {
 		requestTime = System.currentTimeMillis();
@@ -18,6 +19,10 @@ public class Transaction {
 	
 	public String getTransactionId() {
 		return transactionId;
+	}
+	
+	public void setTimeoutHandler(TransactionTimeoutHandler timeoutHandler) {
+		this.timeoutHandler = timeoutHandler;
 	}
 	
 	public void putData(String key, Object value) {

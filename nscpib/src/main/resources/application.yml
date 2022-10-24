@@ -1,2 +1,6 @@
 asn1:
   paths: '/nscp.asn'
+  
+tcp:
+  server:
+    idle-time: 5

@@ -2,6 +2,8 @@ package com.uangel.ktiscp.nscp.nscpsim.sock;
 
 import java.util.concurrent.TimeUnit;
 
+import com.uangel.ktiscp.nscp.common.sock.MessageId;
+import com.uangel.ktiscp.nscp.common.sock.MessageType;
 import com.uangel.ktiscp.nscp.common.sock.NscpMessage;
 import com.uangel.ktiscp.nscp.common.transaction.Transaction;
 import com.uangel.ktiscp.nscp.nscpsim.SimScenario;
@@ -21,11 +23,13 @@ public class TcpClientHandler extends ChannelInboundHandlerAdapter {
 	@Override
 	public void channelActive(ChannelHandlerContext ctx) throws Exception {
 		log.info("channelActive()");
+		System.out.println("Connected.");
 	}
 
 	@Override
 	public void channelInactive(ChannelHandlerContext ctx) throws Exception {
 		log.info("channelInactive()");
+		System.out.println("Disconnected.");
 	}
 
 	@Override
@@ -33,6 +37,12 @@ public class TcpClientHandler extends ChannelInboundHandlerAdapter {
 		log.info("channelRead()");
 		NscpMessage nscpMessage = (NscpMessage)msg;
 		tcpClient.printRecvMessage(nscpMessage);
+		
+		if ( nscpMessage.getMessageId() == MessageId.CONNECTION_CHECK_REQUEST.getValue() ) {
+			NscpMessage pingRes = nscpMessage.getResponse(MessageType.NONE);
+			tcpClient.send(pingRes);
+			return;
+		}
 		
 		Transaction tr = this.tcpClient.getTrManager().removeTransaction(nscpMessage.getTransactionId());
 		if ( tr == null ) {
@@ -64,6 +74,7 @@ public class TcpClientHandler extends ChannelInboundHandlerAdapter {
 			@Override
 			public void run() {
 				log.info("Reconnecting...");;
+				System.out.println("Reconnecting...");
 				tcpClient.connect();
 			}
 		}, 1, TimeUnit.SECONDS);

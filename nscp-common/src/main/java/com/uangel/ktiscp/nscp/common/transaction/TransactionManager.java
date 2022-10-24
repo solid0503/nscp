@@ -70,7 +70,11 @@ class TransactionTimerTask extends TimerTask {
 			Transaction removedTr = trManager.removeTransaction(tr.getTransactionId());
 			if ( removedTr != null ) {
 				log.error("TransactionTimeout!! key={}", removedTr.getTransactionId());
-				trManager.handleTimeout(removedTr);
+				if ( removedTr.timeoutHandler != null ) {
+					removedTr.timeoutHandler.handleTimeout(removedTr);
+				} else {
+					trManager.handleTimeout(removedTr);
+				}
 			}
 		}
 		catch(Exception err) {
