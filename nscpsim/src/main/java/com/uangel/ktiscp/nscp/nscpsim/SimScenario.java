@@ -15,7 +15,6 @@ import lombok.extern.slf4j.Slf4j;
 public class SimScenario {
 	LinkedList<SimAction> actionList = new LinkedList<SimAction>();
 	public String mdn;
-	public String sessionId;
 	private NscpMessage lastRes = null;
 	private static Timer waitTimer = new Timer("Scen-Wait-Timer");
 	boolean bSucc = false;
@@ -48,8 +47,7 @@ public class SimScenario {
 			for ( int i = 0; i < action.paramNameList.size(); i++) {
 				if ( action.paramValueList.get(i).equals("$MDN") ) {
 					msg.setParameter(action.paramNameList.get(i), mdn);
-				} else if ( action.paramValueList.get(i).equals("$SESSION ID") ) {
-					msg.setParameter(action.paramNameList.get(i), sessionId);
+					msg.setRoutingInfoFromMdn(mdn);
 				} else if ( action.paramValueList.get(i).startsWith("@") ) {
 					String resParameter = action.paramValueList.get(i).substring(1).replaceAll(" ", "_").toUpperCase();
 					msg.setParameter(action.paramNameList.get(i), lastRes.getParameter(resParameter));

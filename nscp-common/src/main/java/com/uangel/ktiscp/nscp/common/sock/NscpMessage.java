@@ -59,10 +59,26 @@ public class NscpMessage {
 			case ERROR:
 			case REJECT:
 			case ABORT:
+			case NONE:
 				return false;
 			default:
 				return true;
 		}
+	}
+	
+	private void setRoutingInfo(String npa, String prefix) {
+		routingInformation = new byte[6];
+		ByteBuffer buf = ByteBuffer.wrap(routingInformation);
+		buf.put((byte)1);
+		buf.put(TBCDUtil.parseTBCD(prefix));
+		buf.put((byte)0xff);
+		buf.put(TBCDUtil.parseTBCD(npa));
+	}
+	
+	public void setRoutingInfoFromMdn(String mdn) {
+		String npa = mdn.substring(0, 3);
+		String prefix = mdn.substring(3, 7);
+		this.setRoutingInfo(npa, prefix);
 	}
 	
 	public NscpMessage getResponse(MessageType messageType) {
@@ -119,7 +135,7 @@ public class NscpMessage {
 		return sb.toString();
 	}
 	
-	private static String routingInfoString(byte[] routingInfo) {
+	public static String routingInfoString(byte[] routingInfo) {
 		if ( routingInfo == null ) {
 			return "";
 		}
@@ -137,6 +153,6 @@ public class NscpMessage {
 		String strNpa = TBCDUtil.toTBCD(npa);
 		
 		
-		return String.format("Prefix:{}, NPA:{}", strPrefix, strNpa);
+		return String.format("Prefix:%s, NPA:%s", strPrefix, strNpa);
 	}
 }

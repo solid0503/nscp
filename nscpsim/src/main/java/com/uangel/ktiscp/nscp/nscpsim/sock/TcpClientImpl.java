@@ -12,6 +12,8 @@ import com.uangel.ktiscp.nscp.common.sock.NscpMessage;
 import com.uangel.ktiscp.nscp.common.sock.NscpMsgDecoder;
 import com.uangel.ktiscp.nscp.common.sock.NscpMsgEncoder;
 import com.uangel.ktiscp.nscp.nscpsim.NscpSimContext;
+import com.uangel.ktiscp.nscp.nscpsim.NscpSimCounter;
+import com.uangel.ktiscp.nscp.nscpsim.NscpSimTrManager;
 
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.Channel;
@@ -43,6 +45,10 @@ public class TcpClientImpl implements TcpClient {
 	Asn1Codec asn1Codec;
 	@Autowired
 	NscpSimContext context;
+	@Autowired
+	NscpSimTrManager trManager;
+	@Autowired
+	NscpSimCounter counter;
 	
 	private Channel channel;
 	
@@ -138,5 +144,13 @@ public class TcpClientImpl implements TcpClient {
 		} else {
 			return false;
 		}
+	}
+	
+	public NscpSimTrManager getTrManager() {
+		return this.trManager;
+	}
+	
+	public NscpSimCounter getCounter() {
+		return counter;
 	}
 }

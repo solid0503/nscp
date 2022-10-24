@@ -22,6 +22,7 @@ public class NscpSimScreen {
 	String startTime = null;
 	boolean displayFlag = true;
 	long start = 0;
+	boolean exitFlag = false;
 	
 	private NscpSimScreen() {
 		
@@ -97,16 +98,20 @@ public class NscpSimScreen {
 				System.out.println(resTimeTable.toString());
 				System.out.println("Press enter to command.");
 				
+				if ( exitFlag ) {
+					System.exit(0);
+				}
+				
 				long now = System.currentTimeMillis();
 				if ( now +1000 > start+(trafficGenTimerManager.getDuration()*1000)) {
 					if ( counter.getTryCall() == counter.getSuccCall() + counter.getFailCall() + counter.getTimeoutCall() ) {
-						System.exit(0);
+						exitFlag = true;
 					}
 				}
 				
 				if ( clientSim.quitFlag == true ) {
 					if ( counter.getTryCall() == counter.getSuccCall() + counter.getFailCall() + counter.getTimeoutCall() ) {
-						System.exit(0);
+						exitFlag = true;
 					}
 				}
 				

@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.stereotype.Component;
 
+import com.uangel.ktiscp.nscp.common.transaction.Transaction;
 import com.uangel.ktiscp.nscp.nscpsim.sock.TcpClient;
 
 import lombok.extern.slf4j.Slf4j;
@@ -63,7 +64,6 @@ public class NscpClientSim extends Thread {
 			} catch (InterruptedException e) {}
 		}
 		log.info("connected!!");
-		
 		
 		counter.startResetTimer();
 		trafficGenTimerManager.start(context.getCps(), context.getDuration());

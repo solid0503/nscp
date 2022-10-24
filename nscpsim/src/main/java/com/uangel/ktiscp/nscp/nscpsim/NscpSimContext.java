@@ -29,12 +29,9 @@ public class NscpSimContext {
 	
 	private int messageVersion = 1;
 	
-	private long minSeq;
-	private long maxSeq;
-	private Long nowSeq;
-	private long minSessionId;
-	private long maxSessionId;
-	private Long nowSessionId;
+	private int minSeq;
+	private int maxSeq;
+	private Integer nowSeq;
 	private long startMdn;
 	private long endMdn;
 	private Long nowMdn;
@@ -46,10 +43,11 @@ public class NscpSimContext {
 	private int connectionCount = 1;
 	private Object syncObj = new Object();
 	
-	public long nextSeq() {
-		long seq;
+	
+	public int nextSeq() {
+		int seq;
 		synchronized(syncObj) {
-			seq = nowSeq.longValue();
+			seq = nowSeq.intValue();
 			nowSeq++;
 			if ( nowSeq > this.maxSeq ) {
 				nowSeq = this.minSeq;
@@ -57,18 +55,6 @@ public class NscpSimContext {
 		}
 		return seq;
 		
-	}
-	
-	public String nextSessionId() {
-		long sessionId;
-		synchronized(nowSessionId) {
-			sessionId = nowSessionId.longValue();
-			nowSessionId++;
-			if ( nowSessionId > this.maxSessionId ) {
-				nowSessionId = this.minSessionId;
-			}
-		}
-		return StringUtil.sprintf("%d", sessionId);
 	}
 	
 	public String nextMdn() {
@@ -89,10 +75,8 @@ public class NscpSimContext {
 			mode = reader.read("nscpsim/config/mode", true);
 			cps = Integer.parseInt(reader.read("nscpsim/config/cps", true));
 			duration = Long.parseLong(reader.read("nscpsim/config/duration", true));
-			minSeq = Long.parseLong(reader.read("nscpsim/config/min_seq", true));
-			maxSeq = Long.parseLong(reader.read("nscpsim/config/max_seq", true));
-			minSessionId = Long.parseLong(reader.read("nscpsim/config/min_session_id", true));
-			maxSessionId = Long.parseLong(reader.read("nscpsim/config/max_session_id", true));
+			minSeq = Integer.parseInt(reader.read("nscpsim/config/min_seq", true));
+			maxSeq = Integer.parseInt(reader.read("nscpsim/config/max_seq", true));
 			startMdn = Long.parseLong(reader.read("nscpsim/config/start_mdn", true));
 			endMdn = Long.parseLong(reader.read("nscpsim/config/end_mdn", true));
 			responseTimes = reader.read("nscpsim/config/response_times", true);
@@ -114,7 +98,6 @@ public class NscpSimContext {
 			
 			nowSeq = minSeq;
 			nowMdn = startMdn;
-			nowSessionId = minSessionId;
 			
 			if ( cps <= 1 ) {
 				bPrefMode = false;
@@ -177,15 +160,15 @@ public class NscpSimContext {
 		return minSeq;
 	}
 
-	public void setMinSeq(long minSeq) {
+	public void setMinSeq(int minSeq) {
 		this.minSeq = minSeq;
 	}
 
-	public long getMaxSeq() {
+	public int getMaxSeq() {
 		return maxSeq;
 	}
 
-	public void setMaxSeq(long maxSeq) {
+	public void setMaxSeq(int maxSeq) {
 		this.maxSeq = maxSeq;
 	}
 
@@ -217,6 +200,7 @@ public class NscpSimContext {
 		message.setServiceId(serviceId);
 		Integer opcode = asn1MessageFactory.getOpcodeByName(operationName);
 		message.setOperationCode(opcode);
+		message.setOTID(this.nextSeq());
 		
 		message.setAsn1Message(asn1MessageFactory.newMessage(operationName));
 		

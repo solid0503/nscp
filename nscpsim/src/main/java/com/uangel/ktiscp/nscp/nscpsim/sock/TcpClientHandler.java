@@ -3,6 +3,8 @@ package com.uangel.ktiscp.nscp.nscpsim.sock;
 import java.util.concurrent.TimeUnit;
 
 import com.uangel.ktiscp.nscp.common.sock.NscpMessage;
+import com.uangel.ktiscp.nscp.common.transaction.Transaction;
+import com.uangel.ktiscp.nscp.nscpsim.SimScenario;
 
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
@@ -31,6 +33,22 @@ public class TcpClientHandler extends ChannelInboundHandlerAdapter {
 		log.info("channelRead()");
 		NscpMessage nscpMessage = (NscpMessage)msg;
 		tcpClient.printRecvMessage(nscpMessage);
+		
+		Transaction tr = this.tcpClient.getTrManager().removeTransaction(nscpMessage.getTransactionId());
+		if ( tr == null ) {
+			log.error("Not found tr. key:{}", nscpMessage.getTransactionId());
+			return;
+		}
+		tcpClient.getCounter().incResponseTimeCounter(tr.getDiffTime());
+		tcpClient.getCounter().incMsgRecv();
+		
+		SimScenario scen = (SimScenario)tr.getData("scen");
+		scen.runNextAction(nscpMessage);
+		while ( scen.getNextActionName().equals("send") ) {
+			scen.runNextAction(null);
+			return;
+		}
+		scen.runNextAction(null);
 	}
 
 	@Override

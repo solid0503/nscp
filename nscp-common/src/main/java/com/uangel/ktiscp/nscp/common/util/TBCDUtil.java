@@ -22,15 +22,16 @@ public class TBCDUtil {
             int n1 = octet & 0xF;
             
             if (n1 == 15) {
-                    throw new NumberFormatException("Illegal filler in octet n=" + i);
+            		return buffer.toString();
             }
             buffer.append(cTBCDSymbols[n1]);
             
 			if (n2 == 15) {
                 if (i != size-1)
                     throw new NumberFormatException("Illegal filler in octet n=" + i);
-            } else
+            } else {
                 buffer.append(cTBCDSymbols[n2]);
+            }
         }
 
         return buffer.toString();

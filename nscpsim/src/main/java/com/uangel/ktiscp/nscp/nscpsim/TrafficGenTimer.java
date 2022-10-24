@@ -65,7 +65,6 @@ class TrafficGenTimerTask extends TimerTask {
 			for ( int i = 0; i < cps; i++ ) {
 				SimScenario scen = scenarioTemplate.getNewScenario();
 				scen.mdn = nscpSimContext.nextMdn();
-				scen.sessionId = nscpSimContext.nextSessionId();
 				while ( scen.getNextActionName().equals("send") ) {
 					scen.runNextAction(null);
 				}
