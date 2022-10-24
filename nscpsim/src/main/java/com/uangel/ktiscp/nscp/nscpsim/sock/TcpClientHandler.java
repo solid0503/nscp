@@ -2,6 +2,8 @@ package com.uangel.ktiscp.nscp.nscpsim.sock;
 
 import java.util.concurrent.TimeUnit;
 
+import com.uangel.ktiscp.nscp.common.sock.NscpMessage;
+
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import lombok.extern.slf4j.Slf4j;
@@ -27,6 +29,8 @@ public class TcpClientHandler extends ChannelInboundHandlerAdapter {
 	@Override
 	public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
 		log.info("channelRead()");
+		NscpMessage nscpMessage = (NscpMessage)msg;
+		tcpClient.printRecvMessage(nscpMessage);
 	}
 
 	@Override

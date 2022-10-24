@@ -11,6 +11,7 @@ import com.uangel.ktiscp.nscp.common.asn1.Asn1MessageFactory;
 import com.uangel.ktiscp.nscp.common.sock.NscpMessage;
 import com.uangel.ktiscp.nscp.common.sock.NscpMsgDecoder;
 import com.uangel.ktiscp.nscp.common.sock.NscpMsgEncoder;
+import com.uangel.ktiscp.nscp.nscpsim.NscpSimContext;
 
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.Channel;
@@ -40,6 +41,8 @@ public class TcpClientImpl implements TcpClient {
 	Asn1MessageFactory asn1MessageFactory;
 	@Autowired
 	Asn1Codec asn1Codec;
+	@Autowired
+	NscpSimContext context;
 	
 	private Channel channel;
 	
@@ -92,10 +95,40 @@ public class TcpClientImpl implements TcpClient {
 	
 	public void send(NscpMessage msg) {
 		if( channel != null && channel.isActive() ) {
-			log.debug("channel.writeAndFlush() msg:{}",msg);
 			channel.writeAndFlush(msg);
+			if ( !context.isPrefMode() ) {
+//				log.info("\n=>>=======================>>============================================================================"
+//						   + "\n    SIM => NSCP"
+//					       + "\n=>>=======================>>============================================================================"
+//					       + "{}"
+//					       + "\n=>>=======================>>============================================================================",
+//							msg.getTraceString());
+				System.out.println(String.format("\n=>>=======================>>============================================================================"
+						   + "\n    SIM => NSCP"
+					       + "\n=>>=======================>>============================================================================"
+					       + "%s"
+					       + "\n=>>=======================>>============================================================================",
+							msg.getTraceString()));
+			}
 		} else {
 			throw new RuntimeException( "Can't send message to inactive connection");
+		}
+	}
+	
+	public void printRecvMessage(NscpMessage msg) {
+		if ( !context.isPrefMode() ) {
+//			log.info("\n=<<=======================<<============================================================================"
+//					   + "\n    SIM <= NSCP"
+//				       + "\n=<<=======================<<============================================================================"
+//				       + "{}"
+//				       + "\n=<<=======================<<============================================================================",
+//						msg.getTraceString());
+			System.out.println(String.format("\n=<<=======================<<============================================================================"
+					   + "\n    SIM <= NSCP"
+				       + "\n=<<=======================<<============================================================================"
+				       + "%s"
+				       + "\n=<<=======================<<============================================================================",
+						msg.getTraceString()));
 		}
 	}
 	

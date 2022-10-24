@@ -109,6 +109,9 @@ public class NscpMessage {
 	}
 	
 	private static String bytesToHex(byte[] a) {
+		if ( a == null ) {
+			return "";
+		}
 		StringBuilder sb = new StringBuilder(a.length * 2);
 		for(byte b: a) {
 			sb.append(String.format("%02x ", b));
@@ -117,6 +120,9 @@ public class NscpMessage {
 	}
 	
 	private static String routingInfoString(byte[] routingInfo) {
+		if ( routingInfo == null ) {
+			return "";
+		}
 		ByteBuffer buffer = ByteBuffer.wrap(routingInfo);
 		byte flag = buffer.get();
 		if ( flag == 0 ) {

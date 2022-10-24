@@ -1,0 +1,19 @@
+#!/bin/sh
+
+PNAME=nscpsim
+export PROC_HOME=$UASYS_HOME
+JAR=nscpsim-1.0.0.jar
+PROC_LIB=$PROC_HOME/jar
+export LOG_DIR=${PROC_HOME}/log/${PNAME}
+
+mkdir -p ${LOG_DIR}
+
+JVM_OPT="-D$PNAME"
+JVM_OPT="$JVM_OPT -Dlogging.config=$PROC_HOME/data/nscpsim-logback.xml"
+JVM_OPT="$JVM_OPT -server -Xms128m -Xmx128m"
+JVM_OPT="$JVM_OPT -XX:ErrorFile=$LOG_DIR"
+JVM_OPT="$JVM_OPT -XX:+UseG1GC -XX:G1RSetUpdatingPauseTimePercent=5 -XX:MaxGCPauseMillis=500 -XX:+UseLargePagesInMetaspace -XX:+PrintGCDetails -verbosegc -XX:+PrintGCDateStamps -XX:+PrintHeapAtGC -XX:+PrintTenuringDistribution -XX:+PrintGCApplicationStoppedTime -XX:+PrintPromotionFailure -XX:PrintFLSStatistics=1 -Xloggc:$LOG_DIR/nscpsim-gc.log -XX:+UseGCLogFileRotation -XX:NumberOfGCLogFiles=10 -XX:GCLogFileSize=10M"
+JVM_OPT="$JVM_OPT -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=$LOG_DIR/nscpsim-jvm_pid.hprof"
+#DEBUG="-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=5008"
+
+java $JVM_OPT $DEBUG -jar $PROC_LIB/$JAR $1 --spring.config.location=$PROC_HOME/data/nscpsim-application.yml

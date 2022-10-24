@@ -5,6 +5,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ConfigurableApplicationContext;
 
+import com.uangel.ualib.syslib.uaLog;
+import com.uangel.ualib.syslib.uaLogLevel;
+
 import lombok.extern.slf4j.Slf4j;
 
 @SpringBootApplication(scanBasePackages = {
@@ -22,6 +25,8 @@ public class NscpsimApplication {
 			System.out.println("Usage : nscpsim <file>");
 			return;
 		}
+		
+		uaLog.setLogLevel(0, uaLogLevel.L_CRT);
 		
 		ctx = SpringApplication.run(NscpsimApplication.class, args);
 	}
