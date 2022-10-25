@@ -47,7 +47,10 @@ public class SimScenario {
 			
 			if ( action.opName.equalsIgnoreCase("ReleaseRequest") ) {
 				msg = context.newRelReqMessage();
-			} else {
+			} else if ( action.opName.equalsIgnoreCase("ConnectionCheckRequest") ) {
+				msg = context.newConnCheckReqMessage();
+			}
+			else {
 				msg = context.newMessage(action.opName);
 				for ( int i = 0; i < action.paramNameList.size(); i++) {
 					if ( action.paramValueList.get(i).equals("$MDN") ) {
