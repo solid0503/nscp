@@ -2,6 +2,7 @@ package com.uangel.ktiscp.nscp.common.util;
 
 import java.nio.ByteBuffer;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import com.uangel.ktiscp.nscp.common.sock.NscpMessage;
@@ -18,7 +19,11 @@ public class TBCDUtilTest {
 		buf.put(TBCDUtil.parseTBCD("2921"));
 		buf.put((byte)0xff);
 		buf.put(TBCDUtil.parseTBCD("010"));
-		log.debug("{}", TBCDUtil.dumpBytes(bytes));
-		log.debug("{}", NscpMessage.routingInfoString(bytes));
+		
+		Assertions.assertTrue(TBCDUtil.dumpBytes(bytes).startsWith("0x01 0x92 0x12 0xFF 0x10 0xF0"));
+		Assertions.assertTrue(NscpMessage.routingInfoString(bytes).startsWith("Prefix:2921, NPA:010"));
+		
+		
+		TBCDUtil.parseTBCD("abc*#1");
 	}
 }
