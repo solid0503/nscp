@@ -43,16 +43,22 @@ public class SimScenario {
 		NscpSimCounter counter = NscpsimApplication.getBean(NscpSimCounter.class);
 		
 		if ( action.actionName.equals("send") ) {
-			NscpMessage msg = context.newMessage(action.opName);
-			for ( int i = 0; i < action.paramNameList.size(); i++) {
-				if ( action.paramValueList.get(i).equals("$MDN") ) {
-					msg.setParameter(action.paramNameList.get(i), mdn);
-					msg.setRoutingInfoFromMdn(mdn);
-				} else if ( action.paramValueList.get(i).startsWith("@") ) {
-					String resParameter = action.paramValueList.get(i).substring(1).replaceAll(" ", "_").toUpperCase();
-					msg.setParameter(action.paramNameList.get(i), lastRes.getParameter(resParameter));
-				} else {
-					msg.setParameter(action.paramNameList.get(i), action.paramValueList.get(i));
+			NscpMessage msg = null;
+			
+			if ( action.opName.equalsIgnoreCase("ReleaseRequest") ) {
+				msg = context.newRelReqMessage();
+			} else {
+				msg = context.newMessage(action.opName);
+				for ( int i = 0; i < action.paramNameList.size(); i++) {
+					if ( action.paramValueList.get(i).equals("$MDN") ) {
+						msg.setParameter(action.paramNameList.get(i), mdn);
+						msg.setRoutingInfoFromMdn(mdn);
+					} else if ( action.paramValueList.get(i).startsWith("@") ) {
+						String resParameter = action.paramValueList.get(i).substring(1).replaceAll(" ", "_").toUpperCase();
+						msg.setParameter(action.paramNameList.get(i), lastRes.getParameter(resParameter));
+					} else {
+						msg.setParameter(action.paramNameList.get(i), action.paramValueList.get(i));
+					}
 				}
 			}
 			

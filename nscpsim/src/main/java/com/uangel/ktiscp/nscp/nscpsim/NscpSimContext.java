@@ -213,7 +213,17 @@ public class NscpSimContext {
 		message.setLinkedId((short)0);
 		message.setMessageId((short)MessageId.CONNECTION_REQUEST.getValue());
 		message.setMessageType(MessageType.TERMINATION.getValue());
-		message.setOTID(1);
+		message.setOTID(this.nextSeq());
+		return message;
+	}
+	
+	public NscpMessage newRelReqMessage() {
+		NscpMessage message = nscpMessageFactory.createMessage();
+		message.setMessageVersion(messageVersion);
+		message.setLinkedId((short)0);
+		message.setMessageId((short)MessageId.RELEASE_REQUEST.getValue());
+		message.setMessageType(MessageType.TERMINATION.getValue());
+		message.setOTID(this.nextSeq());
 		return message;
 	}
 	
