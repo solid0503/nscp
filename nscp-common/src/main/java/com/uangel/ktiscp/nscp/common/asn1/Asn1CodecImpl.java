@@ -55,8 +55,6 @@ public class Asn1CodecImpl implements Asn1Codec {
 				
 				Asn1Parser asn1Parser = Asn1ParserFactory.getAsn1Parser(reader);
 				
-//				Asn1Parser asn1Parser = Asn1ParserFactory.getAsn1Parser(
-//						new BufferedReader(new FileReader(asn1FilePath)));
 				asn1Parser.parse(asn1World);
 			}
 			

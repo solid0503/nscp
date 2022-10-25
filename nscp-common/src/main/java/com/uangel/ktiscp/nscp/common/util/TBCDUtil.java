@@ -1,9 +1,9 @@
 package com.uangel.ktiscp.nscp.common.util;
 
 /**
-  * This sample code demonstrates how a character string can be convered to 
-  * a TBCD (Telephony Binary Coded Decimal) string and vice versa.
-  */
+ * BCD 관련 함수 모음 클래스
+ *
+ */
 
 public class TBCDUtil {
     private static String   cTBCDSymbolString = "0123456789*#abc";

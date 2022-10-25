@@ -12,7 +12,7 @@ public interface Asn1MessageFactory {
 	
 	
 	/**
-	 * Service-Id + OpCode로 생성
+	 * Client로부터 메시지를 수신했을때 사용하는 메시지 생성 인터페이스. Service-Id + OpCode로 생성
 	 */
 	Asn1Message newRecvMessage(int serviceId, int opCode);
 

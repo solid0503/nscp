@@ -6,6 +6,11 @@ import java.util.TimerTask;
 
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * 트랜젝션 관리 클래스로 사용하는 곳에서 상속하여 사용. 
+ * handleTimeout을 구현하여 이 클래스에 의해 관리되는 모든 트랜젝션 timeout 처리를 구현한다. 
+ * 단, 개별 트랜젝션에 대한 timeoutHandler가 설정되면 handleTimeout은 호출되지 않는다. 
+ */
 @Slf4j
 public abstract class TransactionManager {
 	private HashMap<String, Transaction> transactions = new HashMap<String, Transaction>();

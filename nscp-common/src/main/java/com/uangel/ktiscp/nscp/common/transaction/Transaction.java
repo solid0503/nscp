@@ -2,12 +2,16 @@ package com.uangel.ktiscp.nscp.common.transaction;
 
 import java.util.HashMap;
 
+/**
+ * 트랜잭션 클래스
+ *
+ */
 public class Transaction {
 	private String transactionId;
 	private long requestTime;
 	private TransactionTimerTask timerTask;
-	private HashMap<String,Object> datas = new HashMap<String,Object>();
-	TransactionTimeoutHandler timeoutHandler;
+	private HashMap<String,Object> datas = new HashMap<String,Object>(); // 데이터를 맵에 저장하여 관리
+	TransactionTimeoutHandler timeoutHandler; // timeroutHandler를 설정하면 해당 트랜젝션에 대해 특별하게 timeout처리를 할수 있다.
 	
 	public Transaction() {
 		requestTime = System.currentTimeMillis();

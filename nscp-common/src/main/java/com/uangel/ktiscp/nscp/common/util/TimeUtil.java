@@ -7,7 +7,10 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 
 
-
+/**
+ * 시간 관련 함수 모음 클래스
+ *
+ */
 public class TimeUtil {
 
 	/**
