@@ -22,15 +22,18 @@ public class TcpServerHandler extends ChannelInboundHandlerAdapter {
 	
 	NscpMessageFactory nscpMessageFactory;
 	NscpibTrManager nscpibTrManager;
+	boolean isAuthorized = false;
+	int connReqWaitTime;
 	
 	/**
 	 * 생성자. TcpServerHandler는 Component가 아니라서 new하는 곳에서 필요한 instance를 주입받는다.
 	 * @param nscpMessageFactory
 	 * @param nscpibTrManager
 	 */
-	public TcpServerHandler(NscpMessageFactory nscpMessageFactory, NscpibTrManager nscpibTrManager) {
+	public TcpServerHandler(NscpMessageFactory nscpMessageFactory, NscpibTrManager nscpibTrManager, int connReqWaitTime) {
 		this.nscpMessageFactory = nscpMessageFactory;
 		this.nscpibTrManager = nscpibTrManager;
+		this.connReqWaitTime = connReqWaitTime;
 	}
 
 	/**
@@ -40,6 +43,18 @@ public class TcpServerHandler extends ChannelInboundHandlerAdapter {
 	public void channelActive(ChannelHandlerContext ctx) throws Exception {
 		log.debug("channelActive()");
 		log.info("Client connected. RemoteAddress={}, LocalAddress={}", ctx.channel().remoteAddress(), ctx.channel().localAddress());
+		
+		Transaction tr = new Transaction();
+		tr.setTimeoutTime(connReqWaitTime*1000);
+		// 접속 요청 메시지가 없는 경우 timeout 처리
+		tr.setTimeoutHandler(new TransactionTimeoutHandler() {
+			@Override
+			public void handleTimeout(Transaction tr) {
+				log.info("A client did not send a CONREQ. RemoteAddress={}", ctx.channel().remoteAddress());
+				ctx.close();
+			}
+		});
+		nscpibTrManager.addTransaction("CONNREQ:"+ctx.hashCode(), tr);
 	}
 
 	/**
@@ -49,6 +64,11 @@ public class TcpServerHandler extends ChannelInboundHandlerAdapter {
 	public void channelInactive(ChannelHandlerContext ctx) throws Exception {
 		log.debug("channelInactive()");
 		log.info("Client disconnected. RemoteAddress={}, LocalAddress={}", ctx.channel().remoteAddress(), ctx.channel().localAddress());
+
+		// 연결요청 대기중인 트랜젝션이 있다면 제거한다.
+		if ( this.isAuthorized == false ) {
+			nscpibTrManager.removeTransaction("CONNREQ:"+ctx.hashCode()); 
+		}
 	}
 
 	/**
@@ -61,11 +81,24 @@ public class TcpServerHandler extends ChannelInboundHandlerAdapter {
 		NscpMessage nscpMessage = (NscpMessage)msg;
 		this.printRecvMsg(ctx, nscpMessage);  // 이쁘게 출력
 		
+		// 연결 요청 메시지
+		if ( nscpMessage.getMessageId() == MessageId.CONNECTION_REQUEST.getValue() ) {
+			// TODO : IP 인증 등을 수행한다. (기존 노드 관리 기능 확인 필요)
+			this.isAuthorized = true;
+			nscpibTrManager.removeTransaction("CONNREQ:"+ctx.hashCode()); // 연결 요청이 왔으므로 해당 트렌젝션은 제거한다. 
+			this.sendResponse(ctx, nscpMessage, MessageType.NONE);
+			return;
+		} 
+		// 연결 해제 요청 메시지
+		else if (nscpMessage.getMessageId() == MessageId.RELEASE_REQUEST.getValue() ) {
+			this.sendResponse(ctx, nscpMessage, MessageType.NONE);
+			ctx.close();
+			return;
+		}
+		
 		// Ping 메시지가 온 경우 응답한다.
 		if ( nscpMessage.getMessageId() == MessageId.CONNECTION_CHECK_REQUEST.getValue() ) {
-			NscpMessage res = nscpMessage.getResponse(MessageType.NONE);
-			ctx.writeAndFlush(res);
-			this.printSendMsg(ctx, res);
+			this.sendResponse(ctx, nscpMessage, MessageType.NONE);
 			return;
 		}
 		// Ping 메시지에 대한 응답 처리
@@ -74,8 +107,20 @@ public class TcpServerHandler extends ChannelInboundHandlerAdapter {
 			return;
 		}
 		
+		// Connection 관련 외의 요청은 인증 후에만 가능하다.
+		if( nscpMessage.isRequest() && this.isAuthorized == false ) {
+			this.sendResponse(ctx, nscpMessage, MessageType.REJECT);
+			return;
+		}
+		
 		// TODO : BEPIB로 던지는 로직 개발 필요
 		NscpMessage res = nscpMessage.getResponse(MessageType.NONE);
+		ctx.writeAndFlush(res);
+		this.printSendMsg(ctx, res);
+	}
+	
+	private void sendResponse(ChannelHandlerContext ctx, NscpMessage req, MessageType messageType) {
+		NscpMessage res = req.getResponse(messageType);
 		ctx.writeAndFlush(res);
 		this.printSendMsg(ctx, res);
 	}

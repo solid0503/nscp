@@ -19,6 +19,7 @@ import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelFutureListener;
+import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.ChannelPipeline;
@@ -78,8 +79,6 @@ public class TcpClientImpl implements TcpClient {
 						}
                     });
             b.option(ChannelOption.TCP_NODELAY, true);
-            
-            this.connect();
         }
         catch (Exception e) {
             log.error("Exception!!", e);
@@ -87,7 +86,8 @@ public class TcpClientImpl implements TcpClient {
         log.info("return init()");
 	}
 	
-	void connect() {
+	@Override
+	public void connect() {
 		b.connect().addListener(new ChannelFutureListener() {
 			@Override
 			public void operationComplete(ChannelFuture future) throws Exception {
@@ -99,25 +99,37 @@ public class TcpClientImpl implements TcpClient {
 		});
 	}
 	
+	void sendConnReq(ChannelHandlerContext ctx) {
+		if ( context.getConnRequest() == 1 ) {
+			NscpMessage connReq = context.newConnReqMessage();
+			ctx.writeAndFlush(connReq);
+			this.printSendMessage(connReq);
+		}
+	}
+	
 	public void send(NscpMessage msg) {
 		if( channel != null && channel.isActive() ) {
 			channel.writeAndFlush(msg);
-			if ( !context.isPrefMode() ) {
-//				log.info("\n=>>=======================>>============================================================================"
-//						   + "\n    SIM => NSCP"
-//					       + "\n=>>=======================>>============================================================================"
-//					       + "{}"
-//					       + "\n=>>=======================>>============================================================================",
-//							msg.getTraceString());
-				System.out.println(String.format("\n=>>=======================>>============================================================================"
-						   + "\n    SIM => NSCP"
-					       + "\n=>>=======================>>============================================================================"
-					       + "%s"
-					       + "\n=>>=======================>>============================================================================",
-							msg.getTraceString()));
-			}
+			printSendMessage(msg);
 		} else {
 			throw new RuntimeException( "Can't send message to inactive connection");
+		}
+	}
+	
+	public void printSendMessage(NscpMessage msg) {
+		if ( !context.isPrefMode() ) {
+//			log.info("\n=>>=======================>>============================================================================"
+//					   + "\n    SIM => NSCP"
+//				       + "\n=>>=======================>>============================================================================"
+//				       + "{}"
+//				       + "\n=>>=======================>>============================================================================",
+//						msg.getTraceString());
+			System.out.println(String.format("\n=>>=======================>>============================================================================"
+					   + "\n    SIM => NSCP"
+				       + "\n=>>=======================>>============================================================================"
+				       + "%s"
+				       + "\n=>>=======================>>============================================================================",
+						msg.getTraceString()));
 		}
 	}
 	
@@ -152,5 +164,9 @@ public class TcpClientImpl implements TcpClient {
 	
 	public NscpSimCounter getCounter() {
 		return counter;
+	}
+	
+	public NscpSimContext getSimContext() {
+		return context;
 	}
 }

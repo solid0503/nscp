@@ -36,7 +36,11 @@ public abstract class TransactionManager {
 			transactions.put(key, tr);
 		}
 		TransactionTimerTask task = new TransactionTimerTask(tr, this);
-		trTimer.schedule(task, trTimeout);
+		if ( tr.timeoutTime > 0 ) {
+			trTimer.schedule(task, tr.timeoutTime);
+		} else {
+			trTimer.schedule(task, trTimeout);
+		}
 		tr.setTimerTask(task);
 	}
 	

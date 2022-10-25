@@ -3,4 +3,4 @@ asn1:
   
 tcp:
   server:
-    idle-time: 5
+    idle-time: 10

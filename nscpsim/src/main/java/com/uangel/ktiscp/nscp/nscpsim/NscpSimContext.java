@@ -37,9 +37,9 @@ public class NscpSimContext {
 	private Long nowMdn;
 	private long duration;
 	private String responseTimes;
-	private boolean bPrefMode = true;
+	private boolean bPrefMode = false;
 	private int sysQueryRes = 1;
-	private String callStatus = "1";
+	private int connRequest = 1;
 	private int connectionCount = 1;
 	private Object syncObj = new Object();
 	
@@ -85,9 +85,9 @@ public class NscpSimContext {
 				this.sysQueryRes = Integer.parseInt(strSysQueryRes);
 			}
 			
-			this.callStatus = reader.read("nscpsim/config/csr_call_status", true);
-			if ( callStatus == null || callStatus.length() == 0) {
-				callStatus = "1";
+			String strConnReq = reader.read("nscpsim/config/conn_req", true);
+			if ( strConnReq != null && strConnReq.length() > 0 ) {
+				this.connRequest = Integer.parseInt(strConnReq);
 			}
 			
 			String strConnectionCount = reader.read("nscpsim/config/connection_count", true);
@@ -207,6 +207,16 @@ public class NscpSimContext {
 		return message;
 	}
 	
+	public NscpMessage newConnReqMessage() {
+		NscpMessage message = nscpMessageFactory.createMessage();
+		message.setMessageVersion(messageVersion);
+		message.setLinkedId((short)0);
+		message.setMessageId((short)MessageId.CONNECTION_REQUEST.getValue());
+		message.setMessageType(MessageType.TERMINATION.getValue());
+		message.setOTID(1);
+		return message;
+	}
+	
 	public long getDuration() {
 		return duration;
 	}
@@ -223,11 +233,11 @@ public class NscpSimContext {
 		return sysQueryRes;
 	}
 	
-	public String getCallStatus() {
-		return this.callStatus;
-	}
-	
 	public int getConnectionCount() {
 		return this.connectionCount;
+	}
+	
+	public int getConnRequest() {
+		return connRequest;
 	}
 }

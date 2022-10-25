@@ -31,8 +31,10 @@ public class TcpServerInitializer extends ChannelInitializer<SocketChannel> {
 	NscpibTrManager nscpibTrManager;
 	
 	@Value("${tcp.server.idle-time:60}")
-	private int idleTime;
+	private int idleTime; // ping-pong idle time
 	
+	@Value("${tcp.server.conn-req-wait-time:10}")
+	private int connReqWaitTime;
 	
 	@Override
 	public void initChannel(SocketChannel ch) throws Exception {
@@ -41,6 +43,6 @@ public class TcpServerInitializer extends ChannelInitializer<SocketChannel> {
 		pipeline.addLast(new NscpMsgDecoder(asn1MessageFactory, asn1Codec));
 		pipeline.addLast(new NscpMsgEncoder(asn1Codec));
 		pipeline.addLast("idleStateHandler", new IdleStateHandler(idleTime, 0, 0));
-		pipeline.addLast(new TcpServerHandler(nscpMessageFactory, nscpibTrManager));
+		pipeline.addLast(new TcpServerHandler(nscpMessageFactory, nscpibTrManager, connReqWaitTime));
 	}
 }

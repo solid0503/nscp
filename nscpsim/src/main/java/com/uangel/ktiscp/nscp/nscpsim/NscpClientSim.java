@@ -57,6 +57,8 @@ public class NscpClientSim extends Thread {
 		
 		context.loadConfig(xmlFile);
 		
+		client.connect();
+		
 		log.info("waiting for connection...");
 		while ( ! client.isConnected() ) {
 			try {

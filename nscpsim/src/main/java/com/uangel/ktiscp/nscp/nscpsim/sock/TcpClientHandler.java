@@ -24,6 +24,7 @@ public class TcpClientHandler extends ChannelInboundHandlerAdapter {
 	public void channelActive(ChannelHandlerContext ctx) throws Exception {
 		log.info("channelActive()");
 		System.out.println("Connected.");
+		tcpClient.sendConnReq(ctx);
 	}
 
 	@Override
@@ -39,8 +40,10 @@ public class TcpClientHandler extends ChannelInboundHandlerAdapter {
 		tcpClient.printRecvMessage(nscpMessage);
 		
 		if ( nscpMessage.getMessageId() == MessageId.CONNECTION_CHECK_REQUEST.getValue() ) {
-			NscpMessage pingRes = nscpMessage.getResponse(MessageType.NONE);
-			tcpClient.send(pingRes);
+			if ( this.tcpClient.getSimContext().getSysQueryRes() == 1 ) {
+				NscpMessage pingRes = nscpMessage.getResponse(MessageType.NONE);
+				tcpClient.send(pingRes);
+			}
 			return;
 		}
 		
