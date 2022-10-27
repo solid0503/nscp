@@ -1,0 +1,31 @@
+{
+	"yun32s": {
+		"name": "Yunku, Lee",
+		"age": 48,
+		"track": [
+			"home",
+			"bus terminal - home",
+			"bus terminal - giheung",
+			"subway station - giheung",
+			"subway station - snne",
+			"compay"
+		],
+		"school": {
+			"kindergarden": "pyengsung",
+			"elementary-school": "myeonghak",
+			"middle-school": "gwanyang",
+			"high-school": "sinsung",
+			"university": "kyonggi"
+		},
+		"test": [
+			[
+				"arr1-value1",
+				"arr1-value2"
+			],
+			[
+				"arr2-value1",
+				"arr2-value2"
+			]
+		]
+	}
+}
