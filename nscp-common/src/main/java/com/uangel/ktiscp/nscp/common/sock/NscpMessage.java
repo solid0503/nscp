@@ -4,6 +4,7 @@ import java.nio.ByteBuffer;
 import java.util.Date;
 
 import com.uangel.ktiscp.nscp.common.asn1.Asn1Message;
+import com.uangel.ktiscp.nscp.common.json.JsonType;
 import com.uangel.ktiscp.nscp.common.util.TBCDUtil;
 import com.uangel.ktiscp.nscp.common.util.TimeUtil;
 
@@ -154,5 +155,28 @@ public class NscpMessage {
 		
 		
 		return String.format("Prefix:%s, NPA:%s", strPrefix, strNpa);
+	}
+	
+	public String toJson() {
+		JsonType json = JsonType.makeJsonObject();
+		
+		JsonType header = json.addObject("header");
+		header.setValue("messageVersion", this.messageVersion);
+		header.setValue("linkedId", this.linkedId);
+		header.setValue("messageId", this.messageId);
+		header.setValue("messageType", this.messageType);
+		header.setValue("serviceId", this.serviceId);
+		header.setValue("operationCode", this.operationCode);
+		header.setValue("oTID", this.oTID);
+		header.setValue("dTID", this.dTID);
+		header.setValue("timeStamp", this.timeStamp);
+		header.setValue("dataLength", this.dataLength);
+		
+		
+		if ( asn1Message != null ) {
+			JsonType body = json.addObject("body");
+			asn1Message.writeToJsonType(body);
+		}
+		return json.toString();
 	}
 }

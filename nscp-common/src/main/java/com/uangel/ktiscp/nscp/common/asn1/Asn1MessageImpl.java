@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.uangel.asn1.Asn1Object;
+import com.uangel.ktiscp.nscp.common.json.JsonType;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -68,5 +69,12 @@ public class Asn1MessageImpl implements Asn1Message {
 		}
 		
 		return sb.toString();
+	}
+	
+	public void writeToJsonType(JsonType jsonType) {
+		jsonType.setValue("OperationName", name);
+		for (String paraName : orderedNames) {
+			jsonType.setValue(paraName, this.getValue(paraName));
+		}
 	}
 }

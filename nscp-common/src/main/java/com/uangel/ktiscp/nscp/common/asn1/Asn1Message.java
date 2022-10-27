@@ -1,6 +1,7 @@
 package com.uangel.ktiscp.nscp.common.asn1;
 
 import com.uangel.asn1.Asn1Object;
+import com.uangel.ktiscp.nscp.common.json.JsonType;
 
 /**
  * 
@@ -37,4 +38,8 @@ public interface Asn1Message {
 	 * 이쁘게 출력
 	 */
 	String getTraceString();
+	/**
+	 * JsonType에 반영
+	 */
+	void writeToJsonType(JsonType jsonType);
 }
