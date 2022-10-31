@@ -19,6 +19,8 @@ public interface Asn1Message {
 	 */
 	Object getValue(String name);
 	
+	String getStringValue(String name);
+	
 	/**
 	 * 최상위 파라미터 이름
 	 */

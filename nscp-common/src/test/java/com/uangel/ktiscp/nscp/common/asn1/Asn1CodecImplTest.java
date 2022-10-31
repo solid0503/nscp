@@ -52,9 +52,9 @@ public class Asn1CodecImplTest {
 		asn1CodecImpl.decode(msg2, buf2);
 		log.info("msg2={}", msg2);
 		
-		Assertions.assertEquals("450081090009000", msg2.getValue("imsi"));
-		Assertions.assertEquals("01090009000", msg2.getValue("msisdn"));
-		Assertions.assertEquals("44010", msg2.getValue("mcc-mnc"));
+		Assertions.assertEquals("450081090009000", msg2.getStringValue("imsi"));
+		Assertions.assertEquals("01090009000", msg2.getStringValue("msisdn"));
+		Assertions.assertEquals("44010", msg2.getStringValue("mcc-mnc"));
 		
 		String traceString =  msg2.getTraceString();
 		Assertions.assertTrue(traceString.contains("CS-Roaming-Noti-Invoke"));

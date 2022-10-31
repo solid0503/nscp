@@ -50,15 +50,15 @@ public class NscpMessageEncoderDecoderTest {
 		message.setOTID(1001);
 		
 		message.setAsn1Message(asn1MessageFactory.newMessage(operationName));
-		message.setParameter("imsi", "450081012341234");
-		message.setParameter("msisdn", "01090009000");
-		message.setParameter("mcc-mnc", "45008");
-		message.setParameter("first-ul", "1");
-		message.setParameter("msc-Number", "1234");
-		message.setParameter("vlr-Number", "5678");
-		message.setParameter("hlr-Number", "9012");
-		message.setParameter("mvno-op-code", "KT");
-		message.setParameter("mvno-subs-type", "0");
+		message.setValue("imsi", "450081012341234");
+		message.setValue("msisdn", "01090009000");
+		message.setValue("mcc-mnc", "45008");
+		message.setValue("first-ul", "1");
+		message.setValue("msc-Number", "1234");
+		message.setValue("vlr-Number", "5678");
+		message.setValue("hlr-Number", "9012");
+		message.setValue("mvno-op-code", "KT");
+		message.setValue("mvno-subs-type", "0");
 		message.setRoutingInfoFromMdn("01090009000");
 		
 		log.info("nscpMessage={}", message.getTraceString());
@@ -91,15 +91,15 @@ public class NscpMessageEncoderDecoderTest {
 		Assertions.assertEquals(message.getDTID(), decodedMessage.getDTID());
 		Assertions.assertEquals(message.getTimeStamp(), decodedMessage.getTimeStamp());
 		
-		Assertions.assertEquals(message.getParameter("imsi"), decodedMessage.getParameter("imsi"));
-		Assertions.assertEquals(message.getParameter("msisdn"), decodedMessage.getParameter("msisdn"));
-		Assertions.assertEquals(message.getParameter("mcc-mnc"), decodedMessage.getParameter("mcc-mnc"));
-		Assertions.assertEquals(message.getParameter("first-ul"), decodedMessage.getParameter("first-ul"));
-		Assertions.assertEquals(message.getParameter("msc-Number"), decodedMessage.getParameter("msc-Number"));
-		Assertions.assertEquals(message.getParameter("vlr-Number"), decodedMessage.getParameter("vlr-Number"));
-		Assertions.assertEquals(message.getParameter("hlr-Number"), decodedMessage.getParameter("hlr-Number"));
-		Assertions.assertEquals(message.getParameter("mvno-op-code"), decodedMessage.getParameter("mvno-op-code"));
-		Assertions.assertEquals(message.getParameter("mvno-subs-type"), decodedMessage.getParameter("mvno-subs-type"));
+		Assertions.assertEquals(message.getStringValue("imsi"), decodedMessage.getStringValue("imsi"));
+		Assertions.assertEquals(message.getStringValue("msisdn"), decodedMessage.getStringValue("msisdn"));
+		Assertions.assertEquals(message.getStringValue("mcc-mnc"), decodedMessage.getStringValue("mcc-mnc"));
+		Assertions.assertEquals(message.getStringValue("first-ul"), decodedMessage.getStringValue("first-ul"));
+		Assertions.assertEquals(message.getStringValue("msc-Number"), decodedMessage.getStringValue("msc-Number"));
+		Assertions.assertEquals(message.getStringValue("vlr-Number"), decodedMessage.getStringValue("vlr-Number"));
+		Assertions.assertEquals(message.getStringValue("hlr-Number"), decodedMessage.getStringValue("hlr-Number"));
+		Assertions.assertEquals(message.getStringValue("mvno-op-code"), decodedMessage.getStringValue("mvno-op-code"));
+		Assertions.assertEquals(message.getStringValue("mvno-subs-type"), decodedMessage.getStringValue("mvno-subs-type"));
 		
 		String jsonString = decodedMessage.toJson();
 		log.info("jsonStr={}", jsonString);

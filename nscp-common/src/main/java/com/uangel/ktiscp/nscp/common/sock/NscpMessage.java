@@ -7,6 +7,7 @@ import com.uangel.ktiscp.nscp.common.asn1.Asn1Message;
 import com.uangel.ktiscp.nscp.common.json.JsonType;
 import com.uangel.ktiscp.nscp.common.util.TBCDUtil;
 import com.uangel.ktiscp.nscp.common.util.TimeUtil;
+import com.uangel.utms.uTMS_Util.ByteUtil;
 
 import lombok.Data;
 
@@ -35,12 +36,23 @@ public class NscpMessage {
 		this.timeStamp = (int)(System.currentTimeMillis()/1000);
 	}
 	
-	public void setParameter(String name, Object value) {
+	public void setValue(String name, Object value) {
+		if ( value instanceof String ) {
+			String strValue = (String)value;
+			if ( strValue.startsWith("0x") ) {
+				asn1Message.setValue(name, ByteUtil.hexStrToOctet(strValue));
+				return;
+			}
+		}
 		asn1Message.setValue(name, value);
 	}
 	
-	public Object getParameter(String name) {
+	public Object getValue(String name) {
 		return asn1Message.getValue(name);
+	}
+	
+	public String getStringValue(String name) {
+		return asn1Message.getStringValue(name); 
 	}
 	
 	public String getTransactionId() {

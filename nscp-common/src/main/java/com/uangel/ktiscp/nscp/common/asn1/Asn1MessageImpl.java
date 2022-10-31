@@ -1,11 +1,13 @@
 package com.uangel.ktiscp.nscp.common.asn1;
 
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
 import com.uangel.asn1.Asn1Object;
 import com.uangel.ktiscp.nscp.common.json.JsonType;
+import com.uangel.utms.uTMS_Util.ByteUtil;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -32,6 +34,30 @@ public class Asn1MessageImpl implements Asn1Message {
 	}
 	
 	@Override
+	public String getStringValue(String name) {
+		
+		Object value = map.get(name);
+		if ( value == null ) {
+			return null;
+		}
+		
+		if ( value instanceof byte[] ) {
+			if ( ByteUtil.isAsciiString((byte[])value) ) {
+				try {
+					return new String((byte[])value, "utf-8");
+				} catch (UnsupportedEncodingException e) {
+					return "0x"+ByteUtil.toHexString((byte[])value);
+				}
+			} 
+			return "0x"+ByteUtil.toHexString((byte[])value);
+		} else if ( value instanceof String ) {
+			return (String)value;
+		} else {
+			return value.toString();
+		}
+	}
+	
+	@Override
 	public String getName() {
 		return name;
 	}
@@ -46,11 +72,7 @@ public class Asn1MessageImpl implements Asn1Message {
 	@Override
 	public void decode(Asn1Object asn1Object) {
 		for ( Asn1Object obj:asn1Object.getArray() ) {
-			if ( obj.getValue() instanceof byte[] ) {
-				this.setValue(obj.getName(), new String((byte[])obj.getValue()));
-			} else {
-				this.setValue(obj.getName(), obj.getValue());
-			}
+			this.setValue(obj.getName(), obj.getValue());
 		}
 	}
 	
@@ -65,7 +87,7 @@ public class Asn1MessageImpl implements Asn1Message {
 		sb.append("\n\t\t\t").append("OperationName       : ").append(name);
 		
 		for (String paraName : orderedNames) {
-			sb.append("\n\t\t\t").append(String.format("%-20s: [%s]", paraName, this.getValue(paraName)));
+			sb.append("\n\t\t\t").append(String.format("%-20s: [%s]", paraName, this.getStringValue(paraName)));
 		}
 		
 		return sb.toString();
@@ -74,7 +96,7 @@ public class Asn1MessageImpl implements Asn1Message {
 	public void writeToJsonType(JsonType jsonType) {
 		jsonType.setValue("OperationName", name);
 		for (String paraName : orderedNames) {
-			jsonType.setValue(paraName, this.getValue(paraName));
+			jsonType.setValue(paraName, this.getStringValue(paraName));
 		}
 	}
 }
