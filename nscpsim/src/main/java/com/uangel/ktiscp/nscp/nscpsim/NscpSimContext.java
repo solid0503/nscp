@@ -191,9 +191,9 @@ public class NscpSimContext {
 		
 		NscpMessage message = nscpMessageFactory.createMessage();
 		message.setMessageVersion(messageVersion);
-		message.setLinkedId((short)0);
-		message.setMessageId((short)MessageId.SERVICE_REQUEST.getValue());
-		message.setServiceId((short)ServiceId.ROAMING_LOCATION_INFO.getValue());
+		message.setLinkedId(0);
+		message.setMessageId(MessageId.SERVICE_REQUEST.getValue());
+		message.setServiceId(ServiceId.ROAMING_LOCATION_INFO.getValue());
 		message.setMessageType(MessageType.TERMINATION.getValue());
 		
 		Integer serviceId = asn1MessageFactory.getServiceIdByName(operationName);
@@ -210,8 +210,8 @@ public class NscpSimContext {
 	public NscpMessage newConnReqMessage() {
 		NscpMessage message = nscpMessageFactory.createMessage();
 		message.setMessageVersion(messageVersion);
-		message.setLinkedId((short)0);
-		message.setMessageId((short)MessageId.CONNECTION_REQUEST.getValue());
+		message.setLinkedId(0);
+		message.setMessageId(MessageId.CONNECTION_REQUEST.getValue());
 		message.setMessageType(MessageType.TERMINATION.getValue());
 		message.setOTID(this.nextSeq());
 		return message;
@@ -220,8 +220,8 @@ public class NscpSimContext {
 	public NscpMessage newConnCheckReqMessage() {
 		NscpMessage message = nscpMessageFactory.createMessage();
 		message.setMessageVersion(messageVersion);
-		message.setLinkedId((short)0);
-		message.setMessageId((short)MessageId.CONNECTION_CHECK_REQUEST.getValue());
+		message.setLinkedId(0);
+		message.setMessageId(MessageId.CONNECTION_CHECK_REQUEST.getValue());
 		message.setMessageType(MessageType.TERMINATION.getValue());
 		message.setOTID(this.nextSeq());
 		return message;
@@ -230,8 +230,8 @@ public class NscpSimContext {
 	public NscpMessage newRelReqMessage() {
 		NscpMessage message = nscpMessageFactory.createMessage();
 		message.setMessageVersion(messageVersion);
-		message.setLinkedId((short)0);
-		message.setMessageId((short)MessageId.RELEASE_REQUEST.getValue());
+		message.setLinkedId(0);
+		message.setMessageId(MessageId.RELEASE_REQUEST.getValue());
 		message.setMessageType(MessageType.TERMINATION.getValue());
 		message.setOTID(this.nextSeq());
 		return message;
