@@ -10,7 +10,6 @@ import com.uangel.ktiscp.nscp.common.sock.MessageId;
 import com.uangel.ktiscp.nscp.common.sock.MessageType;
 import com.uangel.ktiscp.nscp.common.sock.NscpMessage;
 import com.uangel.ktiscp.nscp.common.sock.NscpMessageFactory;
-import com.uangel.ktiscp.nscp.common.sock.ServiceId;
 import com.uangel.utms.uTMS_Util.StringUtil;
 
 import lombok.extern.slf4j.Slf4j;
@@ -193,7 +192,6 @@ public class NscpSimContext {
 		message.setMessageVersion(messageVersion);
 		message.setLinkedId(0);
 		message.setMessageId(MessageId.SERVICE_REQUEST.getValue());
-		message.setServiceId(ServiceId.ROAMING_LOCATION_INFO.getValue());
 		message.setMessageType(MessageType.TERMINATION.getValue());
 		
 		Integer serviceId = asn1MessageFactory.getServiceIdByName(operationName);
