@@ -10,6 +10,8 @@
   <modules>
   	<module>nscp-common</module>
   	<module>nscpib</module>
+  	<module>nscpsim</module>
+  	<module>bepsim</module>
   </modules>
   
   <parent>
