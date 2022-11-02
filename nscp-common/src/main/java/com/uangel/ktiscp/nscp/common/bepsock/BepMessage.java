@@ -37,4 +37,16 @@ public class BepMessage {
 		}
 		return sb.toString();
 	}
+	
+	public BepMessage getResponse() {
+		BepMessage res = new BepMessage();
+		res.subSystemId = this.subSystemId;
+		res.messageType = this.messageType;
+		res.requestType = this.requestType;
+		res.command = this.command;
+		res.transactionId = this.transactionId;
+		res.serviceId = this.serviceId;
+		res.routingKey = this.routingKey;
+		return res;
+	}
 }

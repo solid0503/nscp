@@ -1,6 +1,7 @@
 package com.uangel.ktiscp.nscp.bepsim;
 
 import com.uangel.ktiscp.nscp.common.bepsock.BepMessage;
+import com.uangel.ktiscp.nscp.common.json.JsonType;
 
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
@@ -47,12 +48,15 @@ public class BepsimTcpServerHandler extends ChannelInboundHandlerAdapter {
 		BepMessage bepMessage = (BepMessage)msg;
 		this.printRecvMsg(ctx, bepMessage);  // 이쁘게 출력
 		
+		JsonType json = bepMessage.getJson();
 		
-		/*
 		BepMessage res = bepMessage.getResponse();
+		
+		json.removeObject("body");
+		res.setJson(json);
+		
 		ctx.writeAndFlush(res);
 		this.printSendMsg(ctx, res);
-		*/
 	}
 
 	@Override

@@ -85,6 +85,13 @@ public class JsonType {
             return null;
         }
     }
+    
+    public void removeObject(String attrName) {
+    	try {
+    		jsonObject.remove(attrName);
+    	} catch (Exception e) {
+        }
+    }
 
     public JsonType addArray(String attrName) {
         try {
@@ -128,6 +135,7 @@ public class JsonType {
             return false;
         }
     }
+    
     public boolean addValue(Object value) {
         try {
             jsonArray.put(value);
