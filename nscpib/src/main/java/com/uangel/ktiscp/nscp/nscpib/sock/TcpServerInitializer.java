@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component;
 
 import com.uangel.ktiscp.nscp.common.asn1.Asn1Codec;
 import com.uangel.ktiscp.nscp.common.asn1.Asn1MessageFactory;
+import com.uangel.ktiscp.nscp.common.bepsock.BepClient;
 import com.uangel.ktiscp.nscp.common.sock.NscpMessageFactory;
 import com.uangel.ktiscp.nscp.common.sock.NscpMsgDecoder;
 import com.uangel.ktiscp.nscp.common.sock.NscpMsgEncoder;
@@ -29,6 +30,8 @@ public class TcpServerInitializer extends ChannelInitializer<SocketChannel> {
 	NscpMessageFactory nscpMessageFactory;
 	@Autowired
 	NscpibTrManager nscpibTrManager;
+	@Autowired
+	BepClient bepClient;
 	
 	@Value("${tcp.server.idle-time:60}")
 	private int idleTime; // ping-pong idle time
@@ -43,6 +46,6 @@ public class TcpServerInitializer extends ChannelInitializer<SocketChannel> {
 		pipeline.addLast(new NscpMsgDecoder(asn1MessageFactory, asn1Codec));
 		pipeline.addLast(new NscpMsgEncoder(asn1Codec));
 		pipeline.addLast("idleStateHandler", new IdleStateHandler(idleTime, 0, 0));
-		pipeline.addLast(new TcpServerHandler(nscpMessageFactory, nscpibTrManager, connReqWaitTime));
+		pipeline.addLast(new TcpServerHandler(nscpMessageFactory, nscpibTrManager, bepClient, connReqWaitTime));
 	}
 }

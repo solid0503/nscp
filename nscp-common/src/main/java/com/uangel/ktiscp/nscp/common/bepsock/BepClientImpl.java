@@ -29,7 +29,7 @@ public class BepClientImpl implements BepClient {
 	
 	@Value("${tcp.client.ip:127.0.0.1}")
 	protected String ip;
-	@Value("${tcp.client.port:35003}")
+	@Value("${tcp.client.port:36000}")
 	protected int port;
 	@Value("${tcp.client.worker-thread-count:4}")
 	protected int workerThreadCount;
@@ -68,6 +68,8 @@ public class BepClientImpl implements BepClient {
 						}
                     });
             b.option(ChannelOption.TCP_NODELAY, true);
+            
+            this.connect();
         }
         catch (Exception e) {
             log.error("Exception!!", e);
@@ -107,7 +109,7 @@ public class BepClientImpl implements BepClient {
 		if ( timeoutCallback != null ) {
 			tr.putData("timeoutCallback", timeoutCallback);
 		}
-		
+		this.send(msg);
 	}
 	
 	void printSendMessage(BepMessage msg) {

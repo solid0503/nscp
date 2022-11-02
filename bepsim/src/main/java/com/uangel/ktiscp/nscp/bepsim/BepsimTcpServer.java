@@ -1,4 +1,4 @@
-package com.uangel.ktiscp.nscp.nscpib.sock;
+package com.uangel.ktiscp.nscp.bepsim;
 
 import javax.annotation.PostConstruct;
 
@@ -18,13 +18,13 @@ import lombok.extern.slf4j.Slf4j;
 import io.netty.channel.nio.NioEventLoopGroup;
 
 /**
- * 외부 TCP/IP 연동을 위한 Netty 부트스트랩 구현
+ * TCP/IP 연동을 위한 Netty 부트스트랩 구현
  */
 @Component
 @Slf4j
-public class TcpServer extends Thread {
+public class BepsimTcpServer extends Thread {
 	
-	@Value("${tcp.server.port:35000}")
+	@Value("${tcp.server.port:36000}")
 	private int serverPort;
 	@Value("${tcp.server.boss-thread-count:1}")
 	private int bossThreadCount;
@@ -33,10 +33,9 @@ public class TcpServer extends Thread {
 	
 	
 	@Autowired
-	TcpServerInitializer tcpServerInitializer;
-
+	BepsimTcpServerInitializer tcpServerInitializer;
 	
-	public TcpServer() {
+	public BepsimTcpServer() {
 		super("NSCP-Tcp-Server");
 	}
 	

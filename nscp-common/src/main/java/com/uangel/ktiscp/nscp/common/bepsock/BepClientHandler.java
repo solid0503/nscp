@@ -52,12 +52,12 @@ public class BepClientHandler extends ChannelInboundHandlerAdapter {
 
 	@Override
 	public void channelUnregistered(ChannelHandlerContext ctx) throws Exception {
-		log.info("channelUnregistered remoteAddress={}", ctx.channel().remoteAddress());
+		log.info("channelUnregistered.");
 		
 		ctx.channel().eventLoop().schedule(new Runnable() {
 			@Override
 			public void run() {
-				log.info("Reconnecting...remoteAddress={}", ctx.channel().remoteAddress());
+				log.info("Reconnecting...");
 				bepClient.connect();
 			}
 		}, 1, TimeUnit.SECONDS);

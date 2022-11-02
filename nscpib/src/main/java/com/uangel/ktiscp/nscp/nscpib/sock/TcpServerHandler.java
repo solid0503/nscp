@@ -1,5 +1,8 @@
 package com.uangel.ktiscp.nscp.nscpib.sock;
 
+import com.uangel.ktiscp.nscp.common.bepsock.BepClient;
+import com.uangel.ktiscp.nscp.common.bepsock.BepMessage;
+import com.uangel.ktiscp.nscp.common.json.JsonType;
 import com.uangel.ktiscp.nscp.common.sock.MessageId;
 import com.uangel.ktiscp.nscp.common.sock.MessageType;
 import com.uangel.ktiscp.nscp.common.sock.NscpMessage;
@@ -24,16 +27,18 @@ public class TcpServerHandler extends ChannelInboundHandlerAdapter {
 	NscpibTrManager nscpibTrManager;
 	boolean isAuthorized = false;
 	int connReqWaitTime;
+	BepClient bepClient;
 	
 	/**
 	 * 생성자. TcpServerHandler는 Component가 아니라서 new하는 곳에서 필요한 instance를 주입받는다.
 	 * @param nscpMessageFactory
 	 * @param nscpibTrManager
 	 */
-	public TcpServerHandler(NscpMessageFactory nscpMessageFactory, NscpibTrManager nscpibTrManager, int connReqWaitTime) {
+	public TcpServerHandler(NscpMessageFactory nscpMessageFactory, NscpibTrManager nscpibTrManager, BepClient bepClient, int connReqWaitTime) {
 		this.nscpMessageFactory = nscpMessageFactory;
 		this.nscpibTrManager = nscpibTrManager;
 		this.connReqWaitTime = connReqWaitTime;
+		this.bepClient = bepClient;
 	}
 
 	/**
@@ -113,10 +118,24 @@ public class TcpServerHandler extends ChannelInboundHandlerAdapter {
 			return;
 		}
 		
+		BepMessage bepMessage = new BepMessage();
+		bepMessage.setSubSystemId("NSCPIB");
+		bepMessage.setMessageType("COMMAND");
+		bepMessage.setRequestType("REQUEST");
+		bepMessage.setCommand(nscpMessage.getStringValue("OperationName"));
+		bepMessage.setTransactionId(""+nscpMessage.getTimeStamp());
+		bepMessage.setServiceId("TRS");
+		bepMessage.setRoutingKey(nscpMessage.getStringValue("msisdn"));
+		bepMessage.setJson(JsonType.getJsonObject(nscpMessage.toJson()));
+		
+		bepClient.sendWithCallback(bepMessage, null, null);
+		
+		/*
 		// TODO : BEPIB로 던지는 로직 개발 필요
 		NscpMessage res = nscpMessage.getResponse(MessageType.NONE);
 		ctx.writeAndFlush(res);
 		this.printSendMsg(ctx, res);
+		*/
 	}
 	
 	private void sendResponse(ChannelHandlerContext ctx, NscpMessage req, MessageType messageType) {

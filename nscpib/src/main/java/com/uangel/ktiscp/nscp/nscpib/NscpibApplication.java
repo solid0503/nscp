@@ -6,7 +6,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication(scanBasePackages = {
 		"com.uangel.ktiscp.nscp.nscpib", 
 		"com.uangel.ktiscp.nscp.common.asn1",
-		"com.uangel.ktiscp.nscp.common.sock"
+		"com.uangel.ktiscp.nscp.common.sock",
+		"com.uangel.ktiscp.nscp.common.bepsock"
 })
 public class NscpibApplication {
 

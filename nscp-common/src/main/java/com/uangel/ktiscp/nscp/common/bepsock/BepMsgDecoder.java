@@ -8,7 +8,9 @@ import com.uangel.ktiscp.nscp.common.json.JsonType;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.ByteToMessageDecoder;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public class BepMsgDecoder extends ByteToMessageDecoder {
 	
 	public BepMsgDecoder() {
@@ -32,6 +34,15 @@ public class BepMsgDecoder extends ByteToMessageDecoder {
 		msg.routingKey = in.readCharSequence(20, Charset.forName("utf-8")).toString().trim();
 		msg.bodyLength = in.readCharSequence(5, Charset.forName("utf-8")).toString().trim();
 		
+		
+		log.info("msg.subSystemId={}", msg.subSystemId);
+		log.info("msg.messageType={}", msg.messageType);
+		log.info("msg.requestType={}", msg.requestType);
+		log.info("msg.command={}", msg.command);
+		log.info("msg.transactionId={}", msg.transactionId);
+		log.info("msg.serviceId={}", msg.serviceId);
+		log.info("msg.routingKey={}", msg.routingKey);
+		log.info("msg.bodyLength={}", msg.bodyLength);
 		int nBodyLength = Integer.parseInt(msg.bodyLength, 10);
 		
 		if ( in.readableBytes() < nBodyLength ) { // data가 모두 도착했는지 체크
@@ -43,6 +54,7 @@ public class BepMsgDecoder extends ByteToMessageDecoder {
 			byte[] body = new byte[nBodyLength];
 			in.readBytes(body);
 			String strBody = new String(body, "utf-8");
+			log.info("strBody={}", strBody);
 			msg.json = JsonType.getJsonObject(strBody);
 		}
 		
