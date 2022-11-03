@@ -25,24 +25,15 @@ public class BepMsgDecoder extends ByteToMessageDecoder {
 		in.markReaderIndex(); // 데이터가 끝까지 오지 않은 경우를 대비해 mark
 		
 		BepMessage msg = new BepMessage();
-		msg.subSystemId = in.readCharSequence(20, Charset.forName("utf-8")).toString().trim();
-		msg.messageType = in.readCharSequence(10, Charset.forName("utf-8")).toString().trim();
-		msg.requestType = in.readCharSequence(8, Charset.forName("utf-8")).toString().trim();
-		msg.command = in.readCharSequence(20, Charset.forName("utf-8")).toString().trim();
-		msg.transactionId = in.readCharSequence(20, Charset.forName("utf-8")).toString().trim();
-		msg.serviceId = in.readCharSequence(10, Charset.forName("utf-8")).toString().trim();
-		msg.routingKey = in.readCharSequence(20, Charset.forName("utf-8")).toString().trim();
-		msg.bodyLength = in.readCharSequence(5, Charset.forName("utf-8")).toString().trim();
+		msg.subSystemId = in.readCharSequence(BepMessage.LENGTH_OF_SUB_SYSTEM_ID, BepMessage.CHARSET).toString().trim();
+		msg.messageType = in.readCharSequence(BepMessage.LENGTH_OF_MESSAGE_TYPE, BepMessage.CHARSET).toString().trim();
+		msg.requestType = in.readCharSequence(BepMessage.LENGTH_OF_REQUEST_TYPE, BepMessage.CHARSET).toString().trim();
+		msg.command = in.readCharSequence(BepMessage.LENGTH_OF_COMMAND, BepMessage.CHARSET).toString().trim();
+		msg.transactionId = in.readCharSequence(BepMessage.LENGTH_OF_TRANSACTION_ID, BepMessage.CHARSET).toString().trim();
+		msg.serviceId = in.readCharSequence(BepMessage.LENGTH_OF_SERVICE_ID, BepMessage.CHARSET).toString().trim();
+		msg.routingKey = in.readCharSequence(BepMessage.LENGTH_OF_ROUTING_KEY, BepMessage.CHARSET).toString().trim();
+		msg.bodyLength = in.readCharSequence(BepMessage.LENGTH_OF_BODY_LENGTH, BepMessage.CHARSET).toString().trim();
 		
-		
-		log.info("msg.subSystemId={}", msg.subSystemId);
-		log.info("msg.messageType={}", msg.messageType);
-		log.info("msg.requestType={}", msg.requestType);
-		log.info("msg.command={}", msg.command);
-		log.info("msg.transactionId={}", msg.transactionId);
-		log.info("msg.serviceId={}", msg.serviceId);
-		log.info("msg.routingKey={}", msg.routingKey);
-		log.info("msg.bodyLength={}", msg.bodyLength);
 		int nBodyLength = Integer.parseInt(msg.bodyLength, 10);
 		
 		if ( in.readableBytes() < nBodyLength ) { // data가 모두 도착했는지 체크
@@ -53,8 +44,7 @@ public class BepMsgDecoder extends ByteToMessageDecoder {
 		if ( nBodyLength > 0 ) {
 			byte[] body = new byte[nBodyLength];
 			in.readBytes(body);
-			String strBody = new String(body, "utf-8");
-			log.info("strBody={}", strBody);
+			String strBody = new String(body, BepMessage.CHARSET);
 			msg.json = JsonType.getJsonObject(strBody);
 		}
 		
