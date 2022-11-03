@@ -191,4 +191,11 @@ public class NscpMessage {
 		}
 		return json.toString();
 	}
+	
+	public String getOperationName() {
+		if ( this.asn1Message != null ) {
+			return this.asn1Message.getName();
+		}
+		return null;
+	}
 }

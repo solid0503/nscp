@@ -53,6 +53,10 @@ public class BepsimTcpServerHandler extends ChannelInboundHandlerAdapter {
 		BepMessage res = bepMessage.getResponse();
 		
 		json.removeObject("body");
+		JsonType jsonHeader = json.get("header");
+		jsonHeader.setValue("messageType", 0); 
+		jsonHeader.setValue("dTID", jsonHeader.getValue("oTID"));
+		jsonHeader.setValue("oTID", 1234); 
 		res.setJson(json);
 		
 		ctx.writeAndFlush(res);

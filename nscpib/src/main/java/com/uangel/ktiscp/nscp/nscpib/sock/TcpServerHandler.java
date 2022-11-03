@@ -2,6 +2,8 @@ package com.uangel.ktiscp.nscp.nscpib.sock;
 
 import com.uangel.ktiscp.nscp.common.bepsock.BepClient;
 import com.uangel.ktiscp.nscp.common.bepsock.BepMessage;
+import com.uangel.ktiscp.nscp.common.bepsock.RecvCallback;
+import com.uangel.ktiscp.nscp.common.bepsock.RecvTimeoutCallback;
 import com.uangel.ktiscp.nscp.common.json.JsonType;
 import com.uangel.ktiscp.nscp.common.sock.MessageId;
 import com.uangel.ktiscp.nscp.common.sock.MessageType;
@@ -118,24 +120,37 @@ public class TcpServerHandler extends ChannelInboundHandlerAdapter {
 			return;
 		}
 		
+		String operationName = nscpMessage.getOperationName();
+		operationName = operationName.length()>20?operationName.substring(0,20):operationName;
+		
 		BepMessage bepMessage = new BepMessage();
 		bepMessage.setSubSystemId("NSCPIB");
 		bepMessage.setMessageType("COMMAND");
 		bepMessage.setRequestType("REQUEST");
-		bepMessage.setCommand(nscpMessage.getStringValue("OperationName"));
+		bepMessage.setCommand(operationName);
 		bepMessage.setTransactionId(""+nscpMessage.getTimeStamp());
 		bepMessage.setServiceId("TRS");
 		bepMessage.setRoutingKey(nscpMessage.getStringValue("msisdn"));
 		bepMessage.setJson(JsonType.getJsonObject(nscpMessage.toJson()));
 		
-		bepClient.sendWithCallback(bepMessage, null, null);
+		bepClient.sendWithCallback(bepMessage, new RecvCallback() {
+
+			@Override
+			public void channelRead(ChannelHandlerContext proxyCtx, BepMessage msg) throws Exception {
+				NscpMessage res = nscpMessage.getResponse(MessageType.fromInt((Integer)msg.getJson().get("header").getValue("messageType")));
+				res.setOTID((Integer)msg.getJson().get("header").getValue("oTID"));
+				res.setDTID((Integer)msg.getJson().get("header").getValue("dTID"));
+				ctx.writeAndFlush(res);
+				printSendMsg(ctx, res);
+			}
+			
+		}, new RecvTimeoutCallback() {
+			@Override
+			public void timeout() {
+				sendResponse(ctx, nscpMessage, MessageType.ERROR);
+			}
+		});
 		
-		/*
-		// TODO : BEPIB로 던지는 로직 개발 필요
-		NscpMessage res = nscpMessage.getResponse(MessageType.NONE);
-		ctx.writeAndFlush(res);
-		this.printSendMsg(ctx, res);
-		*/
 	}
 	
 	private void sendResponse(ChannelHandlerContext ctx, NscpMessage req, MessageType messageType) {

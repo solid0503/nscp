@@ -31,7 +31,6 @@ public class BepMessage {
 		sb.append("\n\t\t").append("transactionId : ").append(transactionId);
 		sb.append("\n\t\t").append("serviceId     : ").append(serviceId);
 		sb.append("\n\t\t").append("routingKey    : ").append(routingKey); 
-		sb.append("\n\t\t").append("bodyLength    : ").append(bodyLength);
 		if ( json != null ) {
 			sb.append("\n\t\t").append("Json : ").append(json.toString());
 		}

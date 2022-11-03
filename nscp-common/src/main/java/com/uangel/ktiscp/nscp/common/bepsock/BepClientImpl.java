@@ -109,6 +109,9 @@ public class BepClientImpl implements BepClient {
 		if ( timeoutCallback != null ) {
 			tr.putData("timeoutCallback", timeoutCallback);
 		}
+		
+		callbackTrManager.addTransaction(msg.getTransactionId(), tr);
+		
 		this.send(msg);
 	}
 	
